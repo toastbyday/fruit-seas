@@ -18,12 +18,9 @@ Jogo pirata 2D para celular e PC, pronto para deploy no Vercel.
 1. Importe este repositório no Vercel.
 2. Framework Preset: **Other**.
 3. Não configure Build Command.
-4. Adicione as variáveis de ambiente:
-   - `SUPABASE_URL`
-   - `SUPABASE_PUBLISHABLE_KEY`
-5. Faça o deploy.
+4. Faça o deploy.
 
-O endpoint `/api/config` entrega apenas a configuração pública necessária ao navegador. Nunca use uma `service_role` ou secret key no frontend.
+A URL e a **publishable key** do Supabase ficam no cliente, como recomendado para aplicações web públicas. Nunca coloque uma `service_role` ou secret key no frontend.
 
 ## Supabase
-O arquivo `supabase.sql` documenta a estrutura de save e as policies de segurança necessárias. O backend desta versão foi criado no projeto Supabase separado `fruit-seas`.
+O arquivo `supabase.sql` documenta a estrutura de save e as policies de segurança. O backend está no projeto Supabase separado `fruit-seas`.
