@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071c2c">
+<title>Fruit Seas Online</title>
+<link rel="stylesheet" href="/online.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<style>
+:root{--bg:#071c2c;--panel:#0d2b3cee;--gold:#ffd166;--txt:#f4f7ef;--muted:#9fc2ca;--green:#74dc94;--red:#ff7777;--blue:#63c8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font:14px system-ui,Arial,sans-serif}button,input{font:inherit}button{color:inherit;border:1px solid #ffffff24;background:#ffffff0c;border-radius:10px;cursor:pointer}button:hover{background:#ffffff16}#game{position:fixed;inset:54px 0 0;width:100%;height:calc(100% - 54px);background:#1d86a5;touch-action:none}
+.top{position:fixed;z-index:20;inset:0 0 auto;height:54px;background:#0a2737;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid #ffffff18}.brand{font:bold 19px Georgia;color:var(--gold);letter-spacing:1px}.sea{color:var(--muted);font-size:12px}.spacer{flex:1}.top button{padding:7px 10px}
+#hud{position:fixed;inset:54px 0 0;z-index:5;pointer-events:none}.card{background:var(--panel);border:1px solid #ffffff1d;box-shadow:0 10px 30px #0004;backdrop-filter:blur(8px);border-radius:14px}.stats{position:absolute;left:12px;top:12px;width:235px;padding:12px}.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.small{font-size:11px;color:var(--muted)}.bar{height:7px;background:#04131d;border-radius:99px;overflow:hidden;margin:5px 0 8px}.bar i{display:block;height:100%;width:50%;background:var(--green)}.bar.energy i{background:var(--blue)}.bar.xp i{background:var(--gold)}.money{color:var(--gold);font-weight:800}.quest{position:absolute;left:12px;top:176px;width:235px;padding:12px;pointer-events:auto}.quest b{display:block;color:var(--gold);margin-bottom:5px}.quest div{font-size:12px;color:#d7e7e3;line-height:1.4}.boss{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:min(360px,48vw);padding:8px 12px;display:none}.boss .bar{margin:6px 0 0}.boss .bar i{background:var(--red)}
+.hotbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;padding:7px;pointer-events:auto}.slot{width:68px;height:58px;padding:4px;font-size:11px}.slot strong{display:block;font-size:20px}.nav{position:absolute;right:12px;bottom:14px;display:flex;gap:6px;pointer-events:auto}.nav button{padding:10px}.toastbox{position:absolute;left:50%;top:120px;transform:translateX(-50%);display:grid;gap:6px}.toast{background:#071c2dec;border:1px solid #ffd16666;padding:8px 12px;border-radius:9px;animation:pop .18s}.good{color:#98efad}.bad{color:#ffaaa0}@keyframes pop{from{opacity:0;transform:translateY(5px)}}
+#mobile{display:none}.touch #mobile{display:block}.stickbase{position:absolute;left:20px;bottom:25px;width:110px;height:110px;border:2px solid #ffffff30;border-radius:50%;background:#06192355;pointer-events:auto;touch-action:none}.stick{position:absolute;left:35px;top:35px;width:38px;height:38px;border-radius:50%;background:#fff7d5cc}.atk{position:absolute;right:22px;bottom:90px;width:72px;height:72px;border-radius:50%;background:#ffd166dd;color:#17313a;font-size:25px;pointer-events:auto}.touch .nav{bottom:170px}.touch .hotbar{bottom:14px}.touch .stats{width:195px}.touch .quest{width:195px;top:174px}
+.modalShade{position:fixed;inset:0;z-index:80;background:#020d15bb;display:none;place-items:center;padding:15px}.modalShade.open{display:grid}.modal{width:min(760px,96vw);max-height:90vh;overflow:auto;background:#0b2b3b;border:1px solid #ffffff25;border-radius:18px}.modalHead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #ffffff18}.modalBody{padding:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.item{border:1px solid #ffffff1c;border-radius:12px;padding:11px;background:#ffffff05}.item h3{margin:3px 0 6px}.item p{color:var(--muted);font-size:12px;min-height:32px}.item button{width:100%;padding:8px}.gold{color:var(--gold)}.tag{font-size:10px;padding:3px 6px;border:1px solid #ffffff22;border-radius:99px;color:var(--muted)}.hakiOn{border-color:var(--gold)!important;color:var(--gold)}.auth-gate{z-index:9999}
+@media(max-width:720px){.top{height:48px}.brand{font-size:16px}.sea{display:none}#game,#hud{inset:48px 0 0;height:calc(100% - 48px)}.stats{left:8px;top:8px}.quest{left:8px}.hotbar{gap:3px}.slot{width:50px;height:49px;font-size:9px}.slot strong{font-size:17px}.nav{right:8px}.nav button{font-size:11px;padding:8px}.boss{top:8px}.online-status{top:52px!important}}
+</style>
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+  <form id="authForm" class="auth-card">
+    <div class="auth-logo">✦</div><h1>Fruit Seas</h1><p>Entre na sua conta para salvar o progresso e jogar online.</p>
+    <div class="auth-tabs"><button type="button" id="authLoginTab" class="active">Entrar</button><button type="button" id="authSignupTab">Criar conta</button></div>
+    <label id="nameField" class="auth-field hidden"><span>Nome no jogo</span><input id="authName" maxlength="20" autocomplete="nickname"></label>
+    <label class="auth-field"><span>E-mail</span><input id="authEmail" type="email" required autocomplete="email"></label>
+    <label class="auth-field"><span>Senha</span><input id="authPassword" type="password" minlength="6" required></label>
+    <button id="authSubmit" class="auth-primary">Entrar</button><div id="authMessage" class="auth-message"></div>
+  </form>
+</div>
+<header class="top"><div class="brand">FRUIT SEAS ONLINE</div><div class="sea" id="seaLabel">1º Sea</div><div class="spacer"></div><button id="hakiArm">Armamento [F]</button><button id="hakiObs">Observação [G]</button></header>
+<canvas id="game"></canvas>
+<div id="onlineStatus" class="online-status" hidden><span class="online-dot"></span><span id="onlineCount">1 online</span><span class="online-sep">•</span><span id="onlineUser">Aventureiro</span><button id="logoutBtn">Sair</button></div>
+<div id="hud">
+  <section class="stats card">
+    <div class="row"><b id="playerName">Aventureiro</b><b class="gold" id="level">Nv. 1</b></div>
+    <div class="row small"><span>Vida</span><span id="hpText"></span></div><div class="bar"><i id="hpBar"></i></div>
+    <div class="row small"><span>Energia</span><span id="enText"></span></div><div class="bar energy"><i id="enBar"></i></div>
+    <div class="row"><span class="money">◈ <span id="coins">0</span></span><span class="small" id="xpText"></span></div><div class="bar xp"><i id="xpBar"></i></div>
+  </section>
+  <button class="quest card" id="questBox"><b id="questTitle">Primeira missão</b><div id="questText"></div></button>
+  <div class="boss card" id="bossBox"><div class="row"><b id="bossName"></b><span id="bossHpText" class="small"></span></div><div class="bar"><i id="bossBar"></i></div></div>
+  <div class="hotbar card">
+    <button class="slot" id="attackBtn"><strong>⚔</strong><span id="weaponName">Katana</span></button>
+    <button class="slot" data-skill="0"><strong>Z</strong><span id="skill0">Golpe</span></button>
+    <button class="slot" data-skill="1"><strong>X</strong><span id="skill1">Área</span></button>
+    <button class="slot" data-skill="2"><strong>C</strong><span id="skill2">Ultimate</span></button>
+    <button class="slot" id="dashBtn"><strong>Q</strong><span>Dash</span></button>
+  </div>
+  <div class="nav"><button id="bagBtn">Mochila</button><button id="spinBtn">Girar fruta</button><button id="mapBtn">Mapa</button><button id="boatBtn">Barco</button></div>
+  <div id="toastbox" class="toastbox"></div>
+  <div id="mobile"><div id="stickbase" class="stickbase"><div id="stick" class="stick"></div></div><button id="mobileAtk" class="atk">⚔</button></div>
+</div>
+<div class="modalShade" id="modalShade"><section class="modal"><div class="modalHead"><h2 id="modalTitle">Menu</h2><button id="modalClose">✕</button></div><div id="modalBody" class="modalBody"></div></section></div>
+<script>
+'use strict';
+(function(){
+var $=function(id){return document.getElementById(id)},canvas=$('game'),ctx=canvas.getContext('2d'),TAU=Math.PI*2;
+var WORLD={w:17200,h:5900},SAVE='fruit-seas-save-v2',keys={},joy={x:0,y:0,id:null},modal=false,last=performance.now(),cam={x:1000,y:3000},remakeTimer=0;
+var islands=[
+{name:'Porto Aurora',sea:1,x:1000,y:3000,rx:700,ry:500,min:1,boss:'Capitão Ferrugem',drop:'Casaco do Capitão'},
+{name:'Selva Esmeralda',sea:1,x:2200,y:1250,rx:760,ry:560,min:8,boss:'Rei Gorila',drop:'Máscara Selvagem'},
+{name:'Deserto Solar',sea:1,x:3900,y:3300,rx:820,ry:570,min:18,boss:'Imperador das Dunas',drop:'Cinto Solar'},
+{name:'Fortaleza Congelada',sea:1,x:5650,y:1350,rx:800,ry:600,min:32,boss:'Almirante Glacial',drop:'Capa Boreal'},
+{name:'Ilha do Céu',sea:1,x:6800,y:4100,rx:900,ry:650,min:45,boss:'Deus da Tempestade',drop:'Óculos Celestes'},
+{name:'Reino das Rosas',sea:2,x:9300,y:3100,rx:1050,ry:720,min:50,boss:'Diamante',drop:'Casaco do Guerreiro'},
+{name:'Zona Verde',sea:2,x:11200,y:1200,rx:980,ry:690,min:70,boss:'Fajita',drop:'Chapéu do Caçador'},
+{name:'Cemitério Sombrio',sea:2,x:12600,y:4200,rx:1000,ry:730,min:95,boss:'Capitão Amaldiçoado',drop:'Manto Sombrio'},
+{name:'Neve Ardente',sea:2,x:14700,y:1500,rx:1120,ry:760,min:120,boss:'Almirante de Gelo e Fogo',drop:'Cachecol Elemental'},
+{name:'Navio Esquecido',sea:2,x:15800,y:4400,rx:1180,ry:800,min:150,boss:'Lorde dos Mares',drop:'Coroa do Leviatã'}];
+var fruits='Rocket,Spin,Blade,Spring,Bomb,Smoke,Spike,Flame,Eagle,Ice,Sand,Dark,Diamond,Light,Rubber,Barrier,Ghost,Magma,Quake,Buddha,Love,Spider,Sound,Phoenix,Portal,Rumble,Pain,Blizzard,Gravity,Mammoth,T-Rex,Dough,Shadow,Venom,Control,Spirit,Gas,Leopard,Yeti,Kitsune,Dragon'.split(',');
+var rarity={Rocket:1,Spin:1,Blade:1,Spring:1,Bomb:1,Smoke:1,Spike:1,Flame:2,Eagle:2,Ice:2,Sand:2,Dark:2,Diamond:2,Light:2,Rubber:2,Barrier:2,Ghost:2,Magma:3,Quake:3,Buddha:3,Love:3,Spider:3,Sound:3,Phoenix:4,Portal:4,Rumble:4,Pain:4,Blizzard:4,Gravity:4,Mammoth:4,'T-Rex':5,Dough:5,Shadow:5,Venom:5,Control:5,Spirit:5,Gas:5,Leopard:5,Yeti:5,Kitsune:5,Dragon:5};
+var fruitIcon={Flame:'🔥',Ice:'❄',Light:'☀',Dark:'●',Magma:'🌋',Rumble:'⚡',Buddha:'☸',Dragon:'🐉',Kitsune:'🦊',Leopard:'🐆',Yeti:'❄',Gas:'☁',Portal:'◎',Dough:'◉',Venom:'☠'};
+var swords=['Katana','Sabre de Aço','Lâmina do Vento','Tridente Marinho','Espada Solar','Katana Dupla','Lâmina Sombria','Espada do Dragão'];
+var gear={
+'Casaco do Capitão':{hp:25,dmg:1.05},'Máscara Selvagem':{en:25,dmg:1.06},'Cinto Solar':{hp:35,dmg:1.08},'Capa Boreal':{hp:50,en:30},'Óculos Celestes':{en:55,dmg:1.1},
+'Casaco do Guerreiro':{hp:70,dmg:1.12},'Chapéu do Caçador':{en:80,dmg:1.14},'Manto Sombrio':{hp:90,en:60},'Cachecol Elemental':{hp:100,dmg:1.16},'Coroa do Leviatã':{hp:140,en:100,dmg:1.2}};
+function defaults(){return{x:950,y:3050,level:1,xp:0,coins:750,hp:160,en:110,fruit:'Flame',ownedFruits:['Flame'],weapon:0,ownedWeapons:[0],equipment:null,ownedGear:[],hakiArm:false,hakiObs:false,boat:false,quest:0,progress:0,bosses:[],visited:[0]}}
+var s;try{s=Object.assign(defaults(),JSON.parse(localStorage.getItem(SAVE)||'{}'))}catch(e){s=defaults()}
+if(!Array.isArray(s.ownedFruits))s.ownedFruits=['Flame'];if(!Array.isArray(s.ownedWeapons))s.ownedWeapons=[0];if(!Array.isArray(s.ownedGear))s.ownedGear=[];if(!Array.isArray(s.bosses))s.bosses=[];if(!Array.isArray(s.visited))s.visited=[0];
+var p={x:s.x,y:s.y,hp:1,en:1,angle:0,atk:0,inv:0,dash:0,cd:[0,0,0],dashCd:0},enemies=[],projectiles=[],fx=[];
+function maxHp(){var g=s.equipment&&gear[s.equipment];return 160+s.level*8+(g&&g.hp||0)}function maxEn(){var g=s.equipment&&gear[s.equipment];return 110+s.level*4+(g&&g.en||0)}
+p.hp=Math.min(s.hp||maxHp(),maxHp());p.en=Math.min(s.en||maxEn(),maxEn());
+function needXp(){return 80+s.level*32}
+function seaOf(x){return x>8000?2:1}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function islandAt(x,y){for(var i=0;i<islands.length;i++){var q=islands[i];if(Math.pow((x-q.x)/q.rx,2)+Math.pow((y-q.y)/q.ry,2)<1)return i}return-1}
+function toast(t,c){var d=document.createElement('div');d.className='toast '+(c||'');d.textContent=t;$('toastbox').appendChild(d);setTimeout(function(){d.remove()},3000)}
+function save(){s.x=p.x;s.y=p.y;s.hp=p.hp;s.en=p.en;localStorage.setItem(SAVE,JSON.stringify(s))}
+function spawn(){enemies=[];for(var i=0;i<islands.length;i++){var q=islands[i];for(var j=0;j<6;j++){var a=j/6*TAU,enHp=85+i*70;enemies.push({x:q.x+Math.cos(a)*q.rx*.5,y:q.y+Math.sin(a)*q.ry*.42,home:i,hp:enHp,max:enHp,boss:false,resp:0,hit:0})}var bh=430+i*330;enemies.push({x:q.x+q.rx*.2,y:q.y-q.ry*.35,home:i,hp:bh,max:bh,boss:true,resp:0,hit:0})}}
+spawn();
+function gainXp(n){s.xp+=n;while(s.xp>=needXp()&&s.level<200){s.xp-=needXp();s.level++;p.hp=maxHp();p.en=maxEn();toast('Nível '+s.level+'!', 'good')}save()}
+function damageMul(){var g=s.equipment&&gear[s.equipment];return (g&&g.dmg||1)*(s.hakiArm?1.28:1)}
+function hitEnemy(e,d){if(e.hp<=0)return;e.hp=Math.max(0,e.hp-d*damageMul());e.hit=.1;if(e.hp<=0)kill(e)}
+function kill(e){var i=e.home,q=islands[i];s.coins+=e.boss?450+i*160:35+i*12;gainXp(e.boss?260+i*120:45+i*18);e.resp=e.boss?40:12;
+if(s.quest===i&&s.progress<5)s.progress++;if(e.boss&&!s.bosses.includes(i)){s.bosses.push(i);var drop=q.drop;if(!s.ownedGear.includes(drop)){s.ownedGear.push(drop);toast('Boss dropou: '+drop,'good')}if(i%2===0&&s.weapon<swords.length-1){var wi=Math.min(swords.length-1,Math.floor(i/2)+1);if(!s.ownedWeapons.includes(wi)){s.ownedWeapons.push(wi);toast('Nova espada: '+swords[wi],'good')}}}save()}
+function attack(){if(p.atk>0||s.boat)return;p.atk=.26;var best=null,bd=105;enemies.forEach(function(e){var d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});if(best){p.angle=Math.atan2(best.y-p.y,best.x-p.x);hitEnemy(best,24+s.level*1.8+s.weapon*9);fx.push({x:best.x,y:best.y,r:12,t:.3,c:'#fff2ad'})}}
+function skill(k){if(p.cd[k]>0||s.boat)return;var cost=[18,34,52][k];if(p.en<cost){toast('Energia insuficiente','bad');return}p.en-=cost;p.cd[k]=[1.2,5,10][k];var r=[260,190,280][k],base=(30+s.level*3)*(1+k*.8)*(1+(rarity[s.fruit]||1)*.08);var best=null,bd=700;enemies.forEach(function(e){var d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});
+if(k===0){var a=best?Math.atan2(best.y-p.y,best.x-p.x):p.angle;projectiles.push({x:p.x,y:p.y,vx:Math.cos(a)*560,vy:Math.sin(a)*560,t:1.3,d:base,c:fruitColor(s.fruit)})}
+else{enemies.forEach(function(e){if(e.hp>0&&dist(p,e)<r)hitEnemy(e,base)});fx.push({x:p.x,y:p.y,r:r,t:.45,c:fruitColor(s.fruit)})}}
+function dash(){if(p.dashCd>0||p.en<12)return;p.en-=12;p.dash=.16;p.dashCd=1.2;p.inv=.25}
+function fruitColor(f){var cols=['#ddd','#ffcc70','#ff826d','#8edcff','#8d82ff','#ff67c9'];return cols[rarity[f]||1]}
+function hurt(n){if(p.inv>0||s.boat)return;if(s.hakiObs&&Math.random()<.32){p.inv=.4;toast('Observação: esquiva!');return}p.hp-=n;p.inv=.65;if(p.hp<=0){var q=islands[Math.max(0,s.visited[s.visited.length-1]||0)];p.x=q.x;p.y=q.y;p.hp=maxHp();p.en=maxEn();s.boat=false;toast('Você reapareceu na última ilha.','bad')}save()}
+function update(dt){p.atk=Math.max(0,p.atk-dt);p.inv=Math.max(0,p.inv-dt);p.dash=Math.max(0,p.dash-dt);p.dashCd=Math.max(0,p.dashCd-dt);for(var c=0;c<3;c++)p.cd[c]=Math.max(0,p.cd[c]-dt);p.en=Math.min(maxEn(),p.en+18*dt);
+var mx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x,my=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0)+joy.y,l=Math.hypot(mx,my);if(l>0){mx/=l;my/=l;p.angle=Math.atan2(my,mx);var sp=(s.boat?260:180)*(p.dash>0?2.4:1);var nx=p.x+mx*sp*dt,ny=p.y+my*sp*dt;nx=clamp(nx,25,WORLD.w-25);ny=clamp(ny,25,WORLD.h-25);var land=islandAt(nx,ny);if(s.boat||land>=0){p.x=nx;p.y=ny}}
+var ii=islandAt(p.x,p.y);if(ii>=0&&!s.visited.includes(ii)){s.visited.push(ii);toast('Ilha descoberta: '+islands[ii].name,'good');save()}
+projectiles.forEach(function(pr){pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.t-=dt;for(var i=0;i<enemies.length;i++){var e=enemies[i];if(e.hp>0&&Math.hypot(e.x-pr.x,e.y-pr.y)<35){hitEnemy(e,pr.d);pr.t=0;break}}});projectiles=projectiles.filter(function(q){return q.t>0});
+enemies.forEach(function(e){if(e.hp<=0){e.resp-=dt;if(e.resp<=0){var q=islands[e.home];e.x=q.x+(Math.random()-.5)*q.rx*.8;e.y=q.y+(Math.random()-.5)*q.ry*.7;e.hp=e.max}return}if(seaOf(p.x)!==islands[e.home].sea)return;var d=dist(e,p);if(d<330&&!s.boat){var a=Math.atan2(p.y-e.y,p.x-e.x);e.x+=Math.cos(a)*(e.boss?58:76)*dt;e.y+=Math.sin(a)*(e.boss?58:76)*dt;if(d<42&&Math.random()<dt*1.4)hurt(e.boss?26+e.home*3:12+e.home*2)}});fx.forEach(function(f){f.t-=dt});fx=fx.filter(function(f){return f.t>0});
+cam.x+=(p.x-cam.x)*Math.min(1,dt*8);cam.y+=(p.y-cam.y)*Math.min(1,dt*8);remakeTimer+=dt;if(remakeTimer>.18){remakeTimer=0;hud()}}
+function hud(){$('level').textContent='Nv. '+s.level;$('coins').textContent=Math.floor(s.coins).toLocaleString('pt-BR');$('hpText').textContent=Math.max(0,Math.floor(p.hp))+' / '+maxHp();$('enText').textContent=Math.floor(p.en)+' / '+maxEn();$('hpBar').style.width=clamp(p.hp/maxHp()*100,0,100)+'%';$('enBar').style.width=clamp(p.en/maxEn()*100,0,100)+'%';$('xpText').textContent=Math.floor(s.xp)+' / '+needXp()+' XP';$('xpBar').style.width=clamp(s.xp/needXp()*100,0,100)+'%';$('seaLabel').textContent=seaOf(p.x)+'º Sea';$('weaponName').textContent=swords[s.weapon];var q=islands[Math.min(s.quest,islands.length-1)];$('questTitle').textContent=q?'Missão: '+q.name:'Livre';$('questText').textContent=q?'Derrote 5 inimigos nesta ilha ('+Math.min(s.progress,5)+'/5). Recompensa: moedas e EXP.':'';$('hakiArm').classList.toggle('hakiOn',s.hakiArm);$('hakiObs').classList.toggle('hakiOn',s.hakiObs)}
+function resize(){var r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0)}
+function screen(x,y){var r=canvas.getBoundingClientRect();return{x:r.width/2+(x-cam.x),y:r.height/2+(y-cam.y)}}
+function draw(){var r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ctx.fillStyle=seaOf(p.x)===1?'#218eae':'#176e9c';ctx.fillRect(0,0,r.width,r.height);
+ctx.save();ctx.translate(r.width/2-cam.x,r.height/2-cam.y);
+islands.forEach(function(q,i){if(Math.abs(q.x-cam.x)>r.width/2+q.rx+100||Math.abs(q.y-cam.y)>r.height/2+q.ry+100)return;ctx.fillStyle=q.sea===1?'#dfcf91':'#d6c487';ctx.beginPath();ctx.ellipse(q.x,q.y,q.rx,q.ry,0,0,TAU);ctx.fill();ctx.fillStyle=i%3===1?'#4f9c69':i%3===2?'#b99062':'#68a86b';ctx.beginPath();ctx.ellipse(q.x,q.y,q.rx*.86,q.ry*.82,0,0,TAU);ctx.fill();ctx.fillStyle='#ffffffcc';ctx.font='bold 18px Georgia';ctx.textAlign='center';ctx.fillText(q.name,q.x,q.y-q.ry*.7);ctx.font='11px system-ui';ctx.fillText('Nv. '+q.min+'+',q.x,q.y-q.ry*.7+18)});
+enemies.forEach(function(e){if(e.hp<=0||seaOf(p.x)!==islands[e.home].sea)return;if(Math.abs(e.x-cam.x)>r.width/2+80||Math.abs(e.y-cam.y)>r.height/2+80)return;ctx.fillStyle=e.hit>0?'#fff':e.boss?'#7a2336':'#263948';ctx.beginPath();ctx.arc(e.x,e.y,e.boss?24:15,0,TAU);ctx.fill();ctx.strokeStyle=e.boss?'#ffd166':'#ffffff55';ctx.stroke();ctx.fillStyle='#111b';ctx.fillRect(e.x-28,e.y-(e.boss?38:29),56,5);ctx.fillStyle=e.boss?'#ff7373':'#75dc94';ctx.fillRect(e.x-28,e.y-(e.boss?38:29),56*e.hp/e.max,5)});
+projectiles.forEach(function(pr){ctx.fillStyle=pr.c;ctx.beginPath();ctx.arc(pr.x,pr.y,9,0,TAU);ctx.fill()});fx.forEach(function(f){ctx.strokeStyle=f.c;ctx.globalAlpha=clamp(f.t/.45,0,1);ctx.lineWidth=5;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1-f.t/.45*.35),0,TAU);ctx.stroke();ctx.globalAlpha=1});
+ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.fillStyle=s.boat?'#9c6a3c':'#f1d6a0';if(s.boat){ctx.fillRect(-22,-12,44,24);ctx.fillStyle='#fff1c4';ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(0,-45);ctx.lineTo(30,-10);ctx.fill()}else{ctx.beginPath();ctx.arc(0,0,14,0,TAU);ctx.fill();if(s.hakiArm){ctx.strokeStyle='#241b2f';ctx.lineWidth=6;ctx.stroke()}ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(10,0);ctx.lineTo(33,0);ctx.stroke()}ctx.restore();
+if(s.hakiObs){ctx.strokeStyle='#ffd16677';enemies.forEach(function(e){if(e.hp>0&&dist(e,p)<650){ctx.beginPath();ctx.arc(e.x,e.y,e.boss?32:22,0,TAU);ctx.stroke()}})}
+ctx.restore();
+var near=enemies.filter(function(e){return e.boss&&e.hp>0&&dist(e,p)<650})[0];$('bossBox').style.display=near?'block':'none';if(near){$('bossName').textContent=islands[near.home].boss;$('bossHpText').textContent=Math.ceil(near.hp)+' / '+near.max;$('bossBar').style.width=near.hp/near.max*100+'%'}}
+function loop(t){var dt=Math.min(.04,(t-last)/1000||.016);last=t;if(!modal)update(dt);draw();requestAnimationFrame(loop)}
+function openModal(title,body){modal=true;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalShade').classList.add('open')}
+function closeModal(){modal=false;$('modalShade').classList.remove('open');save()}
+function bag(){var f=s.ownedFruits.map(function(n){return'<div class="item"><span class="tag">Raridade '+rarity[n]+'</span><h3>'+(fruitIcon[n]||'✦')+' '+n+'</h3><button data-equip-fruit="'+n+'" '+(s.fruit===n?'disabled':'')+'>'+(s.fruit===n?'Equipada':'Equipar')+'</button></div>'}).join('');
+var w=s.ownedWeapons.map(function(i){return'<div class="item"><h3>⚔ '+swords[i]+'</h3><button data-equip-weapon="'+i+'" '+(s.weapon===i?'disabled':'')+'>'+(s.weapon===i?'Equipada':'Equipar')+'</button></div>'}).join('');
+var g=s.ownedGear.map(function(n){return'<div class="item"><h3>◆ '+n+'</h3><p>Boost de boss.</p><button data-equip-gear="'+n+'" '+(s.equipment===n?'disabled':'')+'>'+(s.equipment===n?'Equipado':'Equipar')+'</button></div>'}).join('');
+openModal('Mochila','<h3>Frutas</h3><div class="grid">'+f+'</div><h3>Espadas</h3><div class="grid">'+w+'</div><h3>Equipamentos de bosses</h3><div class="grid">'+(g||'<p class="small">Derrote bosses para obter equipamentos.</p>')+'</div>')}
+function spin(){var cost=500+Math.floor(s.level/20)*150;if(s.coins<cost){toast('Você precisa de ◈ '+cost,'bad');return}var pool=[];fruits.forEach(function(f){var rr=rarity[f]||1,w=Math.max(1,8-rr);for(var i=0;i<w*w;i++)pool.push(f)});var f=pool[Math.floor(Math.random()*pool.length)];s.coins-=cost;if(!s.ownedFruits.includes(f))s.ownedFruits.push(f);s.fruit=f;toast('Você girou: '+f+'!','good');save();hud()}
+function map(){var cards=islands.map(function(q,i){var lock=s.level<q.min;return'<div class="item"><span class="tag">'+q.sea+'º Sea</span><h3>'+q.name+'</h3><p>Nível '+q.min+'+ · Boss: '+q.boss+'</p><button data-travel="'+i+'" '+(lock?'disabled':'')+'>'+(lock?'Bloqueada':'Marcar/ir')+'</button></div>'}).join('');openModal('Mapa dos Mares','<div class="grid">'+cards+'</div><p class="small">O 2º Sea começa no nível 50 e possui ilhas maiores e mais distantes.</p>')}
+$('modalBody').addEventListener('click',function(e){var t=e.target;if(t.dataset.equipFruit){s.fruit=t.dataset.equipFruit;save();bag()}if(t.dataset.equipWeapon!==undefined){s.weapon=+t.dataset.equipWeapon;save();bag()}if(t.dataset.equipGear){s.equipment=t.dataset.equipGear;p.hp=Math.min(p.hp,maxHp());p.en=Math.min(p.en,maxEn());save();bag()}if(t.dataset.travel!==undefined){var i=+t.dataset.travel,q=islands[i];if(s.level>=q.min){p.x=q.x;p.y=q.y;s.boat=false;closeModal();toast('Chegou em '+q.name)}}});
+$('bagBtn').onclick=bag;$('spinBtn').onclick=spin;$('mapBtn').onclick=map;$('modalClose').onclick=closeModal;$('attackBtn').onclick=attack;$('dashBtn').onclick=dash;document.querySelectorAll('[data-skill]').forEach(function(b){b.onclick=function(){skill(+b.dataset.skill)}});
+$('boatBtn').onclick=function(){var sea=seaOf(p.x);if(sea===1&&s.level<50&&p.x>7600){toast('Alcance nível 50 para o 2º Sea','bad');return}s.boat=!s.boat;toast(s.boat?'Barco chamado. Navegue pelo oceano.':'Você desembarcou.');save()};
+function hakiArm(){s.hakiArm=!s.hakiArm;toast('Haki do Armamento '+(s.hakiArm?'ativado':'desativado'));save();hud()}function hakiObs(){s.hakiObs=!s.hakiObs;toast('Haki da Observação '+(s.hakiObs?'ativado':'desativado'));save();hud()}
+$('hakiArm').onclick=hakiArm;$('hakiObs').onclick=hakiObs;
+window.addEventListener('keydown',function(e){if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys[e.code]=true;if(e.repeat)return;if(e.code==='Space')attack();if(e.code==='KeyZ')skill(0);if(e.code==='KeyX')skill(1);if(e.code==='KeyC')skill(2);if(e.code==='KeyQ')dash();if(e.code==='KeyF')hakiArm();if(e.code==='KeyG')hakiObs();if(e.code==='KeyM')map();if(e.code==='KeyB')bag();if(e.code==='Escape'&&modal)closeModal()});window.addEventListener('keyup',function(e){keys[e.code]=false});
+var sb=$('stickbase'),stick=$('stick');function jm(e){if(e.pointerId!==joy.id)return;var r=sb.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,m=r.width*.32,d=Math.hypot(x,y);if(d>m){x=x/d*m;y=y/d*m}joy.x=x/m;joy.y=y/m;stick.style.transform='translate('+x+'px,'+y+'px)'}sb.addEventListener('pointerdown',function(e){joy.id=e.pointerId;sb.setPointerCapture(e.pointerId);jm(e)});sb.addEventListener('pointermove',jm);function je(e){if(e.pointerId===joy.id){joy.id=null;joy.x=joy.y=0;stick.style.transform=''}}sb.addEventListener('pointerup',je);sb.addEventListener('pointercancel',je);$('mobileAtk').onpointerdown=attack;
+if(matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0)document.body.classList.add('touch');
+window.addEventListener('resize',resize);window.addEventListener('pagehide',save);resize();hud();requestAnimationFrame(loop);
+window.FruitSeasGame={getState:function(){save();return JSON.parse(JSON.stringify(s))},getView:function(){return{x:p.x,y:p.y,angle:p.angle,boat:s.boat,level:s.level,fruit:s.fruit,camX:cam.x,camY:cam.y,zoom:1,sea:seaOf(p.x)}},getCatalog:function(){return{islands:islands,fruits:fruits}},toast:toast};
+})();
+</script>
+<script src="/online.js"></script>
+</body>
+</html>
