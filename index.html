@@ -3,142 +3,409 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071c2c">
+<meta name="theme-color" content="#081d2a">
+<meta name="description" content="Fruit Seas Online — aventura pirata 2D multiplayer para celular e PC.">
 <title>Fruit Seas Online</title>
 <link rel="stylesheet" href="/online.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
 <style>
-:root{--bg:#071c2c;--panel:#0d2b3cee;--gold:#ffd166;--txt:#f4f7ef;--muted:#9fc2ca;--green:#74dc94;--red:#ff7777;--blue:#63c8ff}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font:14px system-ui,Arial,sans-serif}button,input{font:inherit}button{color:inherit;border:1px solid #ffffff24;background:#ffffff0c;border-radius:10px;cursor:pointer}button:hover{background:#ffffff16}#game{position:fixed;inset:54px 0 0;width:100%;height:calc(100% - 54px);background:#1d86a5;touch-action:none}
-.top{position:fixed;z-index:20;inset:0 0 auto;height:54px;background:#0a2737;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid #ffffff18}.brand{font:bold 19px Georgia;color:var(--gold);letter-spacing:1px}.sea{color:var(--muted);font-size:12px}.spacer{flex:1}.top button{padding:7px 10px}
-#hud{position:fixed;inset:54px 0 0;z-index:5;pointer-events:none}.card{background:var(--panel);border:1px solid #ffffff1d;box-shadow:0 10px 30px #0004;backdrop-filter:blur(8px);border-radius:14px}.stats{position:absolute;left:12px;top:12px;width:235px;padding:12px}.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.small{font-size:11px;color:var(--muted)}.bar{height:7px;background:#04131d;border-radius:99px;overflow:hidden;margin:5px 0 8px}.bar i{display:block;height:100%;width:50%;background:var(--green)}.bar.energy i{background:var(--blue)}.bar.xp i{background:var(--gold)}.money{color:var(--gold);font-weight:800}.quest{position:absolute;left:12px;top:176px;width:235px;padding:12px;pointer-events:auto}.quest b{display:block;color:var(--gold);margin-bottom:5px}.quest div{font-size:12px;color:#d7e7e3;line-height:1.4}.boss{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:min(360px,48vw);padding:8px 12px;display:none}.boss .bar{margin:6px 0 0}.boss .bar i{background:var(--red)}
-.hotbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;padding:7px;pointer-events:auto}.slot{width:68px;height:58px;padding:4px;font-size:11px}.slot strong{display:block;font-size:20px}.nav{position:absolute;right:12px;bottom:14px;display:flex;gap:6px;pointer-events:auto}.nav button{padding:10px}.toastbox{position:absolute;left:50%;top:120px;transform:translateX(-50%);display:grid;gap:6px}.toast{background:#071c2dec;border:1px solid #ffd16666;padding:8px 12px;border-radius:9px;animation:pop .18s}.good{color:#98efad}.bad{color:#ffaaa0}@keyframes pop{from{opacity:0;transform:translateY(5px)}}
-#mobile{display:none}.touch #mobile{display:block}.stickbase{position:absolute;left:20px;bottom:25px;width:110px;height:110px;border:2px solid #ffffff30;border-radius:50%;background:#06192355;pointer-events:auto;touch-action:none}.stick{position:absolute;left:35px;top:35px;width:38px;height:38px;border-radius:50%;background:#fff7d5cc}.atk{position:absolute;right:22px;bottom:90px;width:72px;height:72px;border-radius:50%;background:#ffd166dd;color:#17313a;font-size:25px;pointer-events:auto}.touch .nav{bottom:170px}.touch .hotbar{bottom:14px}.touch .stats{width:195px}.touch .quest{width:195px;top:174px}
-.modalShade{position:fixed;inset:0;z-index:80;background:#020d15bb;display:none;place-items:center;padding:15px}.modalShade.open{display:grid}.modal{width:min(760px,96vw);max-height:90vh;overflow:auto;background:#0b2b3b;border:1px solid #ffffff25;border-radius:18px}.modalHead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid #ffffff18}.modalBody{padding:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}.item{border:1px solid #ffffff1c;border-radius:12px;padding:11px;background:#ffffff05}.item h3{margin:3px 0 6px}.item p{color:var(--muted);font-size:12px;min-height:32px}.item button{width:100%;padding:8px}.gold{color:var(--gold)}.tag{font-size:10px;padding:3px 6px;border:1px solid #ffffff22;border-radius:99px;color:var(--muted)}.hakiOn{border-color:var(--gold)!important;color:var(--gold)}.auth-gate{z-index:9999}
-@media(max-width:720px){.top{height:48px}.brand{font-size:16px}.sea{display:none}#game,#hud{inset:48px 0 0;height:calc(100% - 48px)}.stats{left:8px;top:8px}.quest{left:8px}.hotbar{gap:3px}.slot{width:50px;height:49px;font-size:9px}.slot strong{font-size:17px}.nav{right:8px}.nav button{font-size:11px;padding:8px}.boss{top:8px}.online-status{top:52px!important}}
+:root{
+  --ink:#061822;--deep:#082330;--panel:rgba(10,37,50,.91);--panel2:rgba(18,52,66,.93);
+  --gold:#ffd36f;--gold2:#f1b743;--cream:#fff6dc;--muted:#a7c1c4;--line:rgba(255,255,255,.08);
+  --green:#79e09e;--red:#ff7c78;--blue:#72d2ff;--violet:#a889ff
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061822;color:var(--cream);font:14px Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit}button{color:inherit;cursor:pointer}button:disabled{cursor:default;opacity:.42}
+#game{position:fixed;inset:62px 0 0;width:100%;height:calc(100% - 62px);display:block;background:#188cb1;touch-action:none}
+.top{
+  position:fixed;z-index:25;inset:0 0 auto;height:62px;display:flex;align-items:center;gap:12px;padding:0 17px;
+  background:linear-gradient(180deg,rgba(13,44,58,.98),rgba(6,27,38,.97));
+  border-bottom:1px solid rgba(255,255,255,.07);box-shadow:0 12px 32px rgba(0,0,0,.22);backdrop-filter:blur(14px)
+}
+.brandWrap{display:flex;align-items:center;gap:10px;min-width:220px}.brandMark{
+  width:37px;height:37px;border-radius:11px;display:grid;place-items:center;font-size:22px;color:#173541;
+  background:linear-gradient(145deg,#ffe295,#efb84c);border:1px solid #fff6;box-shadow:0 7px 20px #0004
+}
+.brand{font:800 18px Georgia,serif;letter-spacing:1.4px;color:#fff3ce}.edition{font-size:9px;letter-spacing:2.4px;color:#91b7bd;margin-top:2px}
+.locationPill{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:#d9e7e3;font-size:11px
+}
+.locationPill b{color:#ffe09a}.spacer{flex:1}.topActions{display:flex;gap:7px;align-items:center}
+.top button{
+  border:1px solid rgba(255,255,255,.08);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  padding:8px 10px;font-size:11px;font-weight:700;transition:.18s
+}
+.top button:hover{transform:translateY(-1px);border-color:rgba(255,211,111,.25)}.hakiOn{color:#ffe28f!important;border-color:#ffd36f66!important;box-shadow:0 0 18px rgba(255,211,111,.08)}
+#hud{position:fixed;inset:62px 0 0;z-index:5;pointer-events:none;overflow:hidden}
+.card{
+  position:absolute;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+  border-radius:17px;box-shadow:0 16px 42px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(16px)
+}
+.stats{left:17px;top:17px;width:260px;padding:14px 15px}
+.profile{display:flex;align-items:center;gap:10px;margin-bottom:12px}.avatar{
+  width:43px;height:43px;border-radius:13px;display:grid;place-items:center;font-size:23px;
+  border:1px solid #ffd36f44;background:radial-gradient(circle at 35% 25%,#ffd87544,transparent 55%),#123847
+}
+.profileMeta{min-width:0;flex:1}.profileName{font-weight:900;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profileSub{font-size:10px;color:var(--muted);margin-top:3px}.level{
+  padding:6px 8px;border-radius:9px;font-size:11px;font-weight:900;color:#ffdf8a;
+  border:1px solid #ffd36f38;background:#ffd36f12
+}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.tiny{font-size:10px;color:var(--muted)}
+.bar{height:7px;background:#03131d;border:1px solid rgba(255,255,255,.035);border-radius:99px;overflow:hidden;margin:5px 0 8px;box-shadow:inset 0 2px 5px #0004}
+.bar i{display:block;height:100%;width:50%;border-radius:inherit;background:linear-gradient(90deg,#55c979,#9df0af);box-shadow:0 0 11px #5fe18b33}
+.bar.energy i{background:linear-gradient(90deg,#52b9ff,#89e9ff);box-shadow:0 0 11px #64cfff33}.bar.xp{height:4px;margin:7px 0 0}.bar.xp i{background:linear-gradient(90deg,#efb53e,#ffe294)}
+.wallet{margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.06)}.money{font-weight:900;color:#ffd66f}.fruitBadge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;font-size:10px;color:#dfe9e7;background:#ffffff09;border:1px solid #ffffff0f
+}
+.quest{left:17px;top:230px;width:260px;padding:14px 15px;pointer-events:auto;text-align:left;border:none;color:inherit}
+.quest:hover{border:1px solid #ffd36f25}.eyebrow{font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:#ffd36f;font-weight:900}
+.quest b{display:block;font:700 17px Georgia,serif;margin:7px 0 7px;color:#fff3d6}.questText{font-size:11px;color:#c3d5d3;line-height:1.5}.questMeta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:#ffd36f}.questProgress{height:4px;background:#041722;border-radius:99px;margin-top:8px;overflow:hidden}.questProgress i{display:block;height:100%;background:linear-gradient(90deg,#efb640,#ffe196)}
+.minimapCard{right:17px;top:17px;width:188px;padding:9px;pointer-events:auto}.minimapTitle{display:flex;justify-content:space-between;align-items:center;padding:1px 3px 8px;font-size:9px;letter-spacing:1px;color:#bad0d0}.minimapTitle b{color:#ffe09a}
+#minimap{width:168px;height:126px;display:block;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:#0c6685;box-shadow:inset 0 0 20px #001a2b55}
+.boss{top:17px;left:50%;transform:translateX(-50%);width:min(390px,46vw);padding:9px 13px;display:none}.boss .bar{margin:6px 0 0}.boss .bar i{background:linear-gradient(90deg,#ff696c,#ff9a7b)}
+.locationBanner{top:90px;left:50%;transform:translateX(-50%);padding:10px 18px;text-align:center;opacity:0;transition:opacity .3s;min-width:240px}.locationBanner.show{opacity:1}.locationBanner b{font:700 20px Georgia,serif}.locationBanner span{display:block;color:#b9d0d0;font-size:9px;letter-spacing:2px;margin-top:3px}
+.hotbar{
+  left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:7px;padding:8px;pointer-events:auto;
+  border-radius:18px;background:linear-gradient(180deg,rgba(8,33,45,.94),rgba(4,23,33,.93))
+}
+.slot{
+  position:relative;width:72px;height:62px;padding:4px;border:1px solid rgba(255,255,255,.08);border-radius:13px;color:#f4eee0;
+  background:linear-gradient(180deg,#214d5d,#123441);box-shadow:0 8px 15px #0003,inset 0 1px 0 #ffffff0a;transition:.16s
+}
+.slot:hover{transform:translateY(-2px);border-color:#ffd36f33}.slot strong{display:block;font-size:21px;line-height:1}.slot span{display:block;font-size:9px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.slot em{
+  position:absolute;left:5px;top:5px;font-style:normal;font-size:8px;padding:2px 4px;border-radius:5px;background:#051c28aa;color:#cde0df
+}
+.slot.fruitSlot{border-color:#a889ff38;background:linear-gradient(180deg,#3a4965,#1d3348)}
+.nav{position:absolute;right:17px;bottom:18px;display:flex;gap:6px;pointer-events:auto}.nav button{
+  border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 11px;background:linear-gradient(180deg,rgba(18,55,69,.95),rgba(8,31,42,.95));
+  color:#e9f1ed;font-weight:700;font-size:10px;box-shadow:0 8px 20px #0003
+}
+.nav button:hover{border-color:#ffd36f33}.nav button b{display:block;font-size:16px;margin-bottom:2px}
+.toastbox{position:absolute;left:50%;top:145px;transform:translateX(-50%);display:grid;gap:6px;justify-items:center}.toast{
+  background:linear-gradient(180deg,rgba(18,56,69,.98),rgba(9,34,44,.98));border:1px solid #ffd36f44;padding:9px 13px;border-radius:10px;
+  box-shadow:0 12px 26px #0004;animation:pop .18s;font-size:11px
+}.good{color:#a4efb6}.bad{color:#ffb0a5}@keyframes pop{from{opacity:0;transform:translateY(7px)}}
+#mobile{display:none}.touch #mobile{display:block}.stickbase{
+  position:absolute;left:20px;bottom:26px;width:116px;height:116px;border:2px solid #ffffff18;border-radius:50%;
+  background:radial-gradient(circle,#ffffff09,#00151f35);pointer-events:auto;touch-action:none;backdrop-filter:blur(6px)
+}.stick{position:absolute;left:37px;top:37px;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffbe9,#e5bd6d);box-shadow:0 8px 18px #0004}
+.atk{
+  position:absolute;right:22px;bottom:88px;width:76px;height:76px;border-radius:50%;background:linear-gradient(180deg,#ffe089,#efb94f);
+  border:2px solid #fff8;color:#163640;font-size:26px;pointer-events:auto;box-shadow:0 10px 24px #0004
+}
+.modalShade{position:fixed;inset:0;z-index:80;background:rgba(2,12,19,.74);display:none;place-items:center;padding:16px;backdrop-filter:blur(8px)}.modalShade.open{display:grid}
+.modal{width:min(860px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(180deg,#123b4a,#082733);border:1px solid #ffffff18;border-radius:22px;box-shadow:0 28px 90px #0008}
+.modalHead{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:17px 20px;border-bottom:1px solid #ffffff0e;background:#0c3341f4;backdrop-filter:blur(12px)}
+.modalHead h2{font:700 24px Georgia,serif;margin:0}.modalHead button{width:34px;height:34px;border-radius:10px;border:1px solid #ffffff12;background:#ffffff08}
+.modalBody{padding:19px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.sectionTitle{font:700 17px Georgia,serif;color:#fff1cf;margin:20px 0 9px}.sectionTitle:first-child{margin-top:0}
+.item{position:relative;overflow:hidden;border:1px solid #ffffff10;border-radius:14px;padding:12px;background:linear-gradient(180deg,#ffffff08,#ffffff035);box-shadow:0 8px 20px #0002}
+.item::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#ffffff22,transparent)}.item h3{margin:7px 0 6px;font-size:14px}.item p{color:var(--muted);font-size:10px;line-height:1.5;min-height:30px}
+.item button,.primaryBtn{width:100%;padding:9px;border-radius:9px;border:1px solid #ffffff12;background:#ffffff09;font-weight:800;font-size:10px}.item button:hover,.primaryBtn:hover{border-color:#ffd36f44;background:#ffd36f10}
+.gold{color:var(--gold)}.tag{display:inline-block;font-size:8px;padding:3px 6px;border:1px solid #ffffff18;border-radius:999px;color:#bcd1d1;background:#ffffff07}
+.r1{color:#d2d8da}.r2{color:#70dba0}.r3{color:#69cfff}.r4{color:#b49bff}.r5{color:#ffbf69}
+.spinStage{padding:12px 0 4px;text-align:center}.spinMachine{
+  position:relative;margin:12px auto 16px;width:min(560px,100%);height:120px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:18px;
+  background:radial-gradient(circle at center,#25495e,#071f2d 75%);border:1px solid #ffd36f26;box-shadow:inset 0 0 50px #0006
+}
+.spinMachine::before,.spinMachine::after{content:"";position:absolute;top:0;bottom:0;width:110px;z-index:2;pointer-events:none}.spinMachine::before{left:0;background:linear-gradient(90deg,#071f2d,transparent)}.spinMachine::after{right:0;background:linear-gradient(-90deg,#071f2d,transparent)}
+.spinFruit{font-size:52px;filter:drop-shadow(0 10px 16px #0006)}.spinName{font:800 20px Georgia,serif}.spinCost{font-size:11px;color:#b9cdcd;margin:8px 0 14px}
+.mapSea{margin:4px 0 10px;color:#ffd36f;font:700 16px Georgia,serif}.locked{filter:saturate(.5)}
+@media(max-width:850px){
+  .top{height:54px;padding:0 10px}.brandWrap{min-width:0}.brandMark{width:33px;height:33px}.brand{font-size:15px}.edition,.locationPill{display:none}
+  #game,#hud{inset:54px 0 0;height:calc(100% - 54px)}.topActions button{padding:7px;font-size:9px}
+  .stats{left:8px;top:8px;width:215px;padding:11px}.profile{margin-bottom:8px}.avatar{width:35px;height:35px}.quest{left:8px;top:205px;width:215px;padding:11px}
+  .minimapCard{right:8px;top:8px;width:146px;padding:7px}.minimapTitle{font-size:8px}#minimap{width:130px;height:98px}
+  .hotbar{bottom:12px;gap:3px;padding:6px}.slot{width:52px;height:52px}.slot strong{font-size:17px}.slot span{font-size:8px}.slot em{font-size:7px}
+  .nav{right:8px;bottom:142px;flex-direction:column}.nav button{padding:7px 8px}.nav button b{display:inline;margin-right:4px}
+  .touch .hotbar{bottom:10px}.touch .nav{bottom:150px}.boss{top:8px;width:min(330px,64vw)}.locationBanner{top:70px}
+}
+@media(max-width:540px){
+  .minimapCard{display:none}.quest{top:197px}.topActions #hakiArm,.topActions #hakiObs{font-size:0}.topActions #hakiArm::after{content:"ARM";font-size:9px}.topActions #hakiObs::after{content:"OBS";font-size:9px}
+}
 </style>
 </head>
 <body>
 <div id="authGate" class="auth-gate">
   <form id="authForm" class="auth-card">
-    <div class="auth-logo">✦</div><h1>Fruit Seas</h1><p>Entre na sua conta para salvar o progresso e jogar online.</p>
+    <div class="auth-logo">✦</div><h1>Fruit Seas</h1><p>Explore dois mares, enfrente bosses, encontre frutas e jogue com outros aventureiros.</p>
     <div class="auth-tabs"><button type="button" id="authLoginTab" class="active">Entrar</button><button type="button" id="authSignupTab">Criar conta</button></div>
-    <label id="nameField" class="auth-field hidden"><span>Nome no jogo</span><input id="authName" maxlength="20" autocomplete="nickname"></label>
-    <label class="auth-field"><span>E-mail</span><input id="authEmail" type="email" required autocomplete="email"></label>
-    <label class="auth-field"><span>Senha</span><input id="authPassword" type="password" minlength="6" required></label>
+    <label id="nameField" class="auth-field hidden"><span>Nome no jogo</span><input id="authName" maxlength="20" autocomplete="nickname" placeholder="Aventureiro"></label>
+    <label class="auth-field"><span>E-mail</span><input id="authEmail" type="email" required autocomplete="email" placeholder="voce@email.com"></label>
+    <label class="auth-field"><span>Senha</span><input id="authPassword" type="password" minlength="6" required placeholder="••••••••"></label>
     <button id="authSubmit" class="auth-primary">Entrar</button><div id="authMessage" class="auth-message"></div>
   </form>
 </div>
-<header class="top"><div class="brand">FRUIT SEAS ONLINE</div><div class="sea" id="seaLabel">1º Sea</div><div class="spacer"></div><button id="hakiArm">Armamento [F]</button><button id="hakiObs">Observação [G]</button></header>
+
+<header class="top">
+  <div class="brandWrap"><div class="brandMark">✦</div><div><div class="brand">FRUIT SEAS</div><div class="edition">ONLINE ADVENTURE</div></div></div>
+  <div class="locationPill"><span>⚓</span><b id="islandTop">Porto Aurora</b><span>•</span><span id="seaLabel">1º Sea</span></div>
+  <div class="spacer"></div>
+  <div class="topActions"><button id="hakiArm">Armamento <span>[F]</span></button><button id="hakiObs">Observação <span>[G]</span></button></div>
+</header>
+
 <canvas id="game"></canvas>
 <div id="onlineStatus" class="online-status" hidden><span class="online-dot"></span><span id="onlineCount">1 online</span><span class="online-sep">•</span><span id="onlineUser">Aventureiro</span><button id="logoutBtn">Sair</button></div>
+
 <div id="hud">
   <section class="stats card">
-    <div class="row"><b id="playerName">Aventureiro</b><b class="gold" id="level">Nv. 1</b></div>
-    <div class="row small"><span>Vida</span><span id="hpText"></span></div><div class="bar"><i id="hpBar"></i></div>
-    <div class="row small"><span>Energia</span><span id="enText"></span></div><div class="bar energy"><i id="enBar"></i></div>
-    <div class="row"><span class="money">◈ <span id="coins">0</span></span><span class="small" id="xpText"></span></div><div class="bar xp"><i id="xpBar"></i></div>
+    <div class="profile"><div class="avatar" id="fruitAvatar">🔥</div><div class="profileMeta"><div class="profileName" id="playerName">Aventureiro</div><div class="profileSub">Pirata dos mares</div></div><div class="level" id="level">Nv. 1</div></div>
+    <div class="row tiny"><span>VIDA</span><span id="hpText"></span></div><div class="bar"><i id="hpBar"></i></div>
+    <div class="row tiny"><span>ENERGIA</span><span id="enText"></span></div><div class="bar energy"><i id="enBar"></i></div>
+    <div class="row wallet"><span class="money">◈ <span id="coins">0</span></span><span class="fruitBadge"><span id="fruitMini">🔥</span><b id="fruitName">Flame</b></span></div>
+    <div class="row tiny"><span>EXPERIÊNCIA</span><span id="xpText"></span></div><div class="bar xp"><i id="xpBar"></i></div>
   </section>
-  <button class="quest card" id="questBox"><b id="questTitle">Primeira missão</b><div id="questText"></div></button>
-  <div class="boss card" id="bossBox"><div class="row"><b id="bossName"></b><span id="bossHpText" class="small"></span></div><div class="bar"><i id="bossBar"></i></div></div>
+
+  <button class="quest card" id="questBox">
+    <span class="eyebrow">MISSÃO ATUAL</span><b id="questTitle">Porto Aurora</b>
+    <div class="questText" id="questText"></div><div class="questMeta"><span id="questLevel">Nv. recomendado 1+</span><span id="questCount">0/5</span></div>
+    <div class="questProgress"><i id="questProgress"></i></div>
+  </button>
+
+  <section class="minimapCard card">
+    <div class="minimapTitle"><span>MAPA LOCAL</span><b id="miniSea">SEA 1</b></div><canvas id="minimap"></canvas>
+  </section>
+
+  <div class="boss card" id="bossBox"><div class="row"><b id="bossName"></b><span id="bossHpText" class="tiny"></span></div><div class="bar"><i id="bossBar"></i></div></div>
+  <div class="locationBanner card" id="locationBanner"><b id="locationName">Porto Aurora</b><span id="locationSub">1º SEA • NÍVEL 1+</span></div>
+
   <div class="hotbar card">
-    <button class="slot" id="attackBtn"><strong>⚔</strong><span id="weaponName">Katana</span></button>
-    <button class="slot" data-skill="0"><strong>Z</strong><span id="skill0">Golpe</span></button>
-    <button class="slot" data-skill="1"><strong>X</strong><span id="skill1">Área</span></button>
-    <button class="slot" data-skill="2"><strong>C</strong><span id="skill2">Ultimate</span></button>
-    <button class="slot" id="dashBtn"><strong>Q</strong><span>Dash</span></button>
+    <button class="slot" id="attackBtn"><em>SPACE</em><strong>⚔</strong><span id="weaponName">Katana</span></button>
+    <button class="slot fruitSlot" data-skill="0"><em>Z</em><strong id="skillIcon0">✦</strong><span id="skill0">Disparo</span></button>
+    <button class="slot fruitSlot" data-skill="1"><em>X</em><strong id="skillIcon1">◉</strong><span id="skill1">Explosão</span></button>
+    <button class="slot fruitSlot" data-skill="2"><em>C</em><strong id="skillIcon2">✹</strong><span id="skill2">Domínio</span></button>
+    <button class="slot" id="dashBtn"><em>Q</em><strong>➜</strong><span>Dash</span></button>
   </div>
-  <div class="nav"><button id="bagBtn">Mochila</button><button id="spinBtn">Girar fruta</button><button id="mapBtn">Mapa</button><button id="boatBtn">Barco</button></div>
+
+  <div class="nav">
+    <button id="bagBtn"><b>🎒</b>Mochila</button><button id="spinBtn"><b>✦</b>Girar fruta</button>
+    <button id="mapBtn"><b>🗺</b>Mapa</button><button id="boatBtn"><b>⛵</b>Barco</button>
+  </div>
   <div id="toastbox" class="toastbox"></div>
   <div id="mobile"><div id="stickbase" class="stickbase"><div id="stick" class="stick"></div></div><button id="mobileAtk" class="atk">⚔</button></div>
 </div>
+
 <div class="modalShade" id="modalShade"><section class="modal"><div class="modalHead"><h2 id="modalTitle">Menu</h2><button id="modalClose">✕</button></div><div id="modalBody" class="modalBody"></div></section></div>
+
 <script>
 'use strict';
 (function(){
-var $=function(id){return document.getElementById(id)},canvas=$('game'),ctx=canvas.getContext('2d'),TAU=Math.PI*2;
-var WORLD={w:17200,h:5900},SAVE='fruit-seas-save-v2',keys={},joy={x:0,y:0,id:null},modal=false,last=performance.now(),cam={x:1000,y:3000},remakeTimer=0;
-var islands=[
-{name:'Porto Aurora',sea:1,x:1000,y:3000,rx:700,ry:500,min:1,boss:'Capitão Ferrugem',drop:'Casaco do Capitão'},
-{name:'Selva Esmeralda',sea:1,x:2200,y:1250,rx:760,ry:560,min:8,boss:'Rei Gorila',drop:'Máscara Selvagem'},
-{name:'Deserto Solar',sea:1,x:3900,y:3300,rx:820,ry:570,min:18,boss:'Imperador das Dunas',drop:'Cinto Solar'},
-{name:'Fortaleza Congelada',sea:1,x:5650,y:1350,rx:800,ry:600,min:32,boss:'Almirante Glacial',drop:'Capa Boreal'},
-{name:'Ilha do Céu',sea:1,x:6800,y:4100,rx:900,ry:650,min:45,boss:'Deus da Tempestade',drop:'Óculos Celestes'},
-{name:'Reino das Rosas',sea:2,x:9300,y:3100,rx:1050,ry:720,min:50,boss:'Diamante',drop:'Casaco do Guerreiro'},
-{name:'Zona Verde',sea:2,x:11200,y:1200,rx:980,ry:690,min:70,boss:'Fajita',drop:'Chapéu do Caçador'},
-{name:'Cemitério Sombrio',sea:2,x:12600,y:4200,rx:1000,ry:730,min:95,boss:'Capitão Amaldiçoado',drop:'Manto Sombrio'},
-{name:'Neve Ardente',sea:2,x:14700,y:1500,rx:1120,ry:760,min:120,boss:'Almirante de Gelo e Fogo',drop:'Cachecol Elemental'},
-{name:'Navio Esquecido',sea:2,x:15800,y:4400,rx:1180,ry:800,min:150,boss:'Lorde dos Mares',drop:'Coroa do Leviatã'}];
-var fruits='Rocket,Spin,Blade,Spring,Bomb,Smoke,Spike,Flame,Eagle,Ice,Sand,Dark,Diamond,Light,Rubber,Barrier,Ghost,Magma,Quake,Buddha,Love,Spider,Sound,Phoenix,Portal,Rumble,Pain,Blizzard,Gravity,Mammoth,T-Rex,Dough,Shadow,Venom,Control,Spirit,Gas,Leopard,Yeti,Kitsune,Dragon'.split(',');
-var rarity={Rocket:1,Spin:1,Blade:1,Spring:1,Bomb:1,Smoke:1,Spike:1,Flame:2,Eagle:2,Ice:2,Sand:2,Dark:2,Diamond:2,Light:2,Rubber:2,Barrier:2,Ghost:2,Magma:3,Quake:3,Buddha:3,Love:3,Spider:3,Sound:3,Phoenix:4,Portal:4,Rumble:4,Pain:4,Blizzard:4,Gravity:4,Mammoth:4,'T-Rex':5,Dough:5,Shadow:5,Venom:5,Control:5,Spirit:5,Gas:5,Leopard:5,Yeti:5,Kitsune:5,Dragon:5};
-var fruitIcon={Flame:'🔥',Ice:'❄',Light:'☀',Dark:'●',Magma:'🌋',Rumble:'⚡',Buddha:'☸',Dragon:'🐉',Kitsune:'🦊',Leopard:'🐆',Yeti:'❄',Gas:'☁',Portal:'◎',Dough:'◉',Venom:'☠'};
-var swords=['Katana','Sabre de Aço','Lâmina do Vento','Tridente Marinho','Espada Solar','Katana Dupla','Lâmina Sombria','Espada do Dragão'];
-var gear={
+const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),mini=$('minimap'),mctx=mini.getContext('2d'),TAU=Math.PI*2;
+const WORLD={w:17200,h:5900},SAVE='fruit-seas-save-v2';
+let keys={},joy={x:0,y:0,id:null},modal=false,last=performance.now(),cam={x:1000,y:3000},hudTimer=0,worldTime=0,lastIsland=-99,locationTimer=0,spinBusy=false;
+const islands=[
+{name:'Porto Aurora',sea:1,x:1000,y:3000,rx:700,ry:500,min:1,boss:'Capitão Ferrugem',drop:'Casaco do Capitão',biome:'port',c1:'#d9cc91',c2:'#5c9b65'},
+{name:'Selva Esmeralda',sea:1,x:2200,y:1250,rx:760,ry:560,min:8,boss:'Rei Gorila',drop:'Máscara Selvagem',biome:'jungle',c1:'#d7c88a',c2:'#40885b'},
+{name:'Deserto Solar',sea:1,x:3900,y:3300,rx:820,ry:570,min:18,boss:'Imperador das Dunas',drop:'Cinto Solar',biome:'desert',c1:'#e6ce83',c2:'#c29a54'},
+{name:'Fortaleza Congelada',sea:1,x:5650,y:1350,rx:800,ry:600,min:32,boss:'Almirante Glacial',drop:'Capa Boreal',biome:'ice',c1:'#dce8dc',c2:'#8ebfc1'},
+{name:'Ilha do Céu',sea:1,x:6800,y:4100,rx:900,ry:650,min:45,boss:'Deus da Tempestade',drop:'Óculos Celestes',biome:'sky',c1:'#ebe5bd',c2:'#7fc0a0'},
+{name:'Reino das Rosas',sea:2,x:9300,y:3100,rx:1050,ry:720,min:50,boss:'Diamante',drop:'Casaco do Guerreiro',biome:'rose',c1:'#d9c392',c2:'#8b8d62'},
+{name:'Zona Verde',sea:2,x:11200,y:1200,rx:980,ry:690,min:70,boss:'Fajita',drop:'Chapéu do Caçador',biome:'green',c1:'#d2c284',c2:'#477e55'},
+{name:'Cemitério Sombrio',sea:2,x:12600,y:4200,rx:1000,ry:730,min:95,boss:'Capitão Amaldiçoado',drop:'Manto Sombrio',biome:'grave',c1:'#bcb59c',c2:'#465e5a'},
+{name:'Neve Ardente',sea:2,x:14700,y:1500,rx:1120,ry:760,min:120,boss:'Almirante de Gelo e Fogo',drop:'Cachecol Elemental',biome:'frostfire',c1:'#d9ded2',c2:'#82999a'},
+{name:'Navio Esquecido',sea:2,x:15800,y:4400,rx:1180,ry:800,min:150,boss:'Lorde dos Mares',drop:'Coroa do Leviatã',biome:'wreck',c1:'#b6aa80',c2:'#52655c'}
+];
+const fruits='Rocket,Spin,Blade,Spring,Bomb,Smoke,Spike,Flame,Eagle,Ice,Sand,Dark,Diamond,Light,Rubber,Barrier,Ghost,Magma,Quake,Buddha,Love,Spider,Sound,Phoenix,Portal,Rumble,Pain,Blizzard,Gravity,Mammoth,T-Rex,Dough,Shadow,Venom,Control,Spirit,Gas,Leopard,Yeti,Kitsune,Dragon'.split(',');
+const rarity={Rocket:1,Spin:1,Blade:1,Spring:1,Bomb:1,Smoke:1,Spike:1,Flame:2,Eagle:2,Ice:2,Sand:2,Dark:2,Diamond:2,Light:2,Rubber:2,Barrier:2,Ghost:2,Magma:3,Quake:3,Buddha:3,Love:3,Spider:3,Sound:3,Phoenix:4,Portal:4,Rumble:4,Pain:4,Blizzard:4,Gravity:4,Mammoth:4,'T-Rex':5,Dough:5,Shadow:5,Venom:5,Control:5,Spirit:5,Gas:5,Leopard:5,Yeti:5,Kitsune:5,Dragon:5};
+const fruitIcon={Rocket:'🚀',Spin:'🌀',Blade:'🗡',Spring:'➿',Bomb:'💣',Smoke:'☁',Spike:'✹',Flame:'🔥',Eagle:'🦅',Ice:'❄',Sand:'⌁',Dark:'●',Diamond:'◆',Light:'☀',Rubber:'◯',Barrier:'▣',Ghost:'👻',Magma:'🌋',Quake:'◉',Buddha:'☸',Love:'♥',Spider:'🕸',Sound:'♫',Phoenix:'🔥',Portal:'◎',Rumble:'⚡',Pain:'✦',Blizzard:'❄',Gravity:'◉',Mammoth:'🐘','T-Rex':'🦖',Dough:'◉',Shadow:'☾',Venom:'☠',Control:'⌖',Spirit:'✧',Gas:'☁',Leopard:'🐆',Yeti:'❄',Kitsune:'🦊',Dragon:'🐉'};
+const rarityName=['','Comum','Incomum','Rara','Épica','Mítica'];
+const swords=['Katana','Sabre de Aço','Lâmina do Vento','Tridente Marinho','Espada Solar','Katana Dupla','Lâmina Sombria','Espada do Dragão'];
+const gear={
 'Casaco do Capitão':{hp:25,dmg:1.05},'Máscara Selvagem':{en:25,dmg:1.06},'Cinto Solar':{hp:35,dmg:1.08},'Capa Boreal':{hp:50,en:30},'Óculos Celestes':{en:55,dmg:1.1},
-'Casaco do Guerreiro':{hp:70,dmg:1.12},'Chapéu do Caçador':{en:80,dmg:1.14},'Manto Sombrio':{hp:90,en:60},'Cachecol Elemental':{hp:100,dmg:1.16},'Coroa do Leviatã':{hp:140,en:100,dmg:1.2}};
+'Casaco do Guerreiro':{hp:70,dmg:1.12},'Chapéu do Caçador':{en:80,dmg:1.14},'Manto Sombrio':{hp:90,en:60},'Cachecol Elemental':{hp:100,dmg:1.16},'Coroa do Leviatã':{hp:140,en:100,dmg:1.2}
+};
 function defaults(){return{x:950,y:3050,level:1,xp:0,coins:750,hp:160,en:110,fruit:'Flame',ownedFruits:['Flame'],weapon:0,ownedWeapons:[0],equipment:null,ownedGear:[],hakiArm:false,hakiObs:false,boat:false,quest:0,progress:0,bosses:[],visited:[0]}}
-var s;try{s=Object.assign(defaults(),JSON.parse(localStorage.getItem(SAVE)||'{}'))}catch(e){s=defaults()}
-if(!Array.isArray(s.ownedFruits))s.ownedFruits=['Flame'];if(!Array.isArray(s.ownedWeapons))s.ownedWeapons=[0];if(!Array.isArray(s.ownedGear))s.ownedGear=[];if(!Array.isArray(s.bosses))s.bosses=[];if(!Array.isArray(s.visited))s.visited=[0];
-var p={x:s.x,y:s.y,hp:1,en:1,angle:0,atk:0,inv:0,dash:0,cd:[0,0,0],dashCd:0},enemies=[],projectiles=[],fx=[];
-function maxHp(){var g=s.equipment&&gear[s.equipment];return 160+s.level*8+(g&&g.hp||0)}function maxEn(){var g=s.equipment&&gear[s.equipment];return 110+s.level*4+(g&&g.en||0)}
+let s;try{s=Object.assign(defaults(),JSON.parse(localStorage.getItem(SAVE)||'{}'))}catch(e){s=defaults()}
+['ownedFruits','ownedWeapons','ownedGear','bosses','visited'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=defaults()[k]});
+let p={x:s.x,y:s.y,hp:1,en:1,angle:0,atk:0,inv:0,dash:0,cd:[0,0,0],dashCd:0},enemies=[],projectiles=[],fx=[],props=[];
+function rnd(seed){let x=Math.sin(seed*999.17)*43758.5453;return x-Math.floor(x)}
+function maxHp(){let g=s.equipment&&gear[s.equipment];return 160+s.level*8+(g&&g.hp||0)}
+function maxEn(){let g=s.equipment&&gear[s.equipment];return 110+s.level*4+(g&&g.en||0)}
 p.hp=Math.min(s.hp||maxHp(),maxHp());p.en=Math.min(s.en||maxEn(),maxEn());
-function needXp(){return 80+s.level*32}
-function seaOf(x){return x>8000?2:1}
-function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-function islandAt(x,y){for(var i=0;i<islands.length;i++){var q=islands[i];if(Math.pow((x-q.x)/q.rx,2)+Math.pow((y-q.y)/q.ry,2)<1)return i}return-1}
-function toast(t,c){var d=document.createElement('div');d.className='toast '+(c||'');d.textContent=t;$('toastbox').appendChild(d);setTimeout(function(){d.remove()},3000)}
+const needXp=()=>80+s.level*32,seaOf=x=>x>8000?2:1,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function islandAt(x,y){for(let i=0;i<islands.length;i++){let q=islands[i];if(((x-q.x)/q.rx)**2+((y-q.y)/q.ry)**2<1)return i}return-1}
+function toast(t,c=''){let d=document.createElement('div');d.className='toast '+c;d.textContent=t;$('toastbox').appendChild(d);setTimeout(()=>d.remove(),3000)}
 function save(){s.x=p.x;s.y=p.y;s.hp=p.hp;s.en=p.en;localStorage.setItem(SAVE,JSON.stringify(s))}
-function spawn(){enemies=[];for(var i=0;i<islands.length;i++){var q=islands[i];for(var j=0;j<6;j++){var a=j/6*TAU,enHp=85+i*70;enemies.push({x:q.x+Math.cos(a)*q.rx*.5,y:q.y+Math.sin(a)*q.ry*.42,home:i,hp:enHp,max:enHp,boss:false,resp:0,hit:0})}var bh=430+i*330;enemies.push({x:q.x+q.rx*.2,y:q.y-q.ry*.35,home:i,hp:bh,max:bh,boss:true,resp:0,hit:0})}}
-spawn();
-function gainXp(n){s.xp+=n;while(s.xp>=needXp()&&s.level<200){s.xp-=needXp();s.level++;p.hp=maxHp();p.en=maxEn();toast('Nível '+s.level+'!', 'good')}save()}
-function damageMul(){var g=s.equipment&&gear[s.equipment];return (g&&g.dmg||1)*(s.hakiArm?1.28:1)}
-function hitEnemy(e,d){if(e.hp<=0)return;e.hp=Math.max(0,e.hp-d*damageMul());e.hit=.1;if(e.hp<=0)kill(e)}
-function kill(e){var i=e.home,q=islands[i];s.coins+=e.boss?450+i*160:35+i*12;gainXp(e.boss?260+i*120:45+i*18);e.resp=e.boss?40:12;
-if(s.quest===i&&s.progress<5)s.progress++;if(e.boss&&!s.bosses.includes(i)){s.bosses.push(i);var drop=q.drop;if(!s.ownedGear.includes(drop)){s.ownedGear.push(drop);toast('Boss dropou: '+drop,'good')}if(i%2===0&&s.weapon<swords.length-1){var wi=Math.min(swords.length-1,Math.floor(i/2)+1);if(!s.ownedWeapons.includes(wi)){s.ownedWeapons.push(wi);toast('Nova espada: '+swords[wi],'good')}}}save()}
-function attack(){if(p.atk>0||s.boat)return;p.atk=.26;var best=null,bd=105;enemies.forEach(function(e){var d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});if(best){p.angle=Math.atan2(best.y-p.y,best.x-p.x);hitEnemy(best,24+s.level*1.8+s.weapon*9);fx.push({x:best.x,y:best.y,r:12,t:.3,c:'#fff2ad'})}}
-function skill(k){if(p.cd[k]>0||s.boat)return;var cost=[18,34,52][k];if(p.en<cost){toast('Energia insuficiente','bad');return}p.en-=cost;p.cd[k]=[1.2,5,10][k];var r=[260,190,280][k],base=(30+s.level*3)*(1+k*.8)*(1+(rarity[s.fruit]||1)*.08);var best=null,bd=700;enemies.forEach(function(e){var d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});
-if(k===0){var a=best?Math.atan2(best.y-p.y,best.x-p.x):p.angle;projectiles.push({x:p.x,y:p.y,vx:Math.cos(a)*560,vy:Math.sin(a)*560,t:1.3,d:base,c:fruitColor(s.fruit)})}
-else{enemies.forEach(function(e){if(e.hp>0&&dist(p,e)<r)hitEnemy(e,base)});fx.push({x:p.x,y:p.y,r:r,t:.45,c:fruitColor(s.fruit)})}}
-function dash(){if(p.dashCd>0||p.en<12)return;p.en-=12;p.dash=.16;p.dashCd=1.2;p.inv=.25}
-function fruitColor(f){var cols=['#ddd','#ffcc70','#ff826d','#8edcff','#8d82ff','#ff67c9'];return cols[rarity[f]||1]}
-function hurt(n){if(p.inv>0||s.boat)return;if(s.hakiObs&&Math.random()<.32){p.inv=.4;toast('Observação: esquiva!');return}p.hp-=n;p.inv=.65;if(p.hp<=0){var q=islands[Math.max(0,s.visited[s.visited.length-1]||0)];p.x=q.x;p.y=q.y;p.hp=maxHp();p.en=maxEn();s.boat=false;toast('Você reapareceu na última ilha.','bad')}save()}
-function update(dt){p.atk=Math.max(0,p.atk-dt);p.inv=Math.max(0,p.inv-dt);p.dash=Math.max(0,p.dash-dt);p.dashCd=Math.max(0,p.dashCd-dt);for(var c=0;c<3;c++)p.cd[c]=Math.max(0,p.cd[c]-dt);p.en=Math.min(maxEn(),p.en+18*dt);
-var mx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x,my=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0)+joy.y,l=Math.hypot(mx,my);if(l>0){mx/=l;my/=l;p.angle=Math.atan2(my,mx);var sp=(s.boat?260:180)*(p.dash>0?2.4:1);var nx=p.x+mx*sp*dt,ny=p.y+my*sp*dt;nx=clamp(nx,25,WORLD.w-25);ny=clamp(ny,25,WORLD.h-25);var land=islandAt(nx,ny);if(s.boat||land>=0){p.x=nx;p.y=ny}}
-var ii=islandAt(p.x,p.y);if(ii>=0&&!s.visited.includes(ii)){s.visited.push(ii);toast('Ilha descoberta: '+islands[ii].name,'good');save()}
-projectiles.forEach(function(pr){pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.t-=dt;for(var i=0;i<enemies.length;i++){var e=enemies[i];if(e.hp>0&&Math.hypot(e.x-pr.x,e.y-pr.y)<35){hitEnemy(e,pr.d);pr.t=0;break}}});projectiles=projectiles.filter(function(q){return q.t>0});
-enemies.forEach(function(e){if(e.hp<=0){e.resp-=dt;if(e.resp<=0){var q=islands[e.home];e.x=q.x+(Math.random()-.5)*q.rx*.8;e.y=q.y+(Math.random()-.5)*q.ry*.7;e.hp=e.max}return}if(seaOf(p.x)!==islands[e.home].sea)return;var d=dist(e,p);if(d<330&&!s.boat){var a=Math.atan2(p.y-e.y,p.x-e.x);e.x+=Math.cos(a)*(e.boss?58:76)*dt;e.y+=Math.sin(a)*(e.boss?58:76)*dt;if(d<42&&Math.random()<dt*1.4)hurt(e.boss?26+e.home*3:12+e.home*2)}});fx.forEach(function(f){f.t-=dt});fx=fx.filter(function(f){return f.t>0});
-cam.x+=(p.x-cam.x)*Math.min(1,dt*8);cam.y+=(p.y-cam.y)*Math.min(1,dt*8);remakeTimer+=dt;if(remakeTimer>.18){remakeTimer=0;hud()}}
-function hud(){$('level').textContent='Nv. '+s.level;$('coins').textContent=Math.floor(s.coins).toLocaleString('pt-BR');$('hpText').textContent=Math.max(0,Math.floor(p.hp))+' / '+maxHp();$('enText').textContent=Math.floor(p.en)+' / '+maxEn();$('hpBar').style.width=clamp(p.hp/maxHp()*100,0,100)+'%';$('enBar').style.width=clamp(p.en/maxEn()*100,0,100)+'%';$('xpText').textContent=Math.floor(s.xp)+' / '+needXp()+' XP';$('xpBar').style.width=clamp(s.xp/needXp()*100,0,100)+'%';$('seaLabel').textContent=seaOf(p.x)+'º Sea';$('weaponName').textContent=swords[s.weapon];var q=islands[Math.min(s.quest,islands.length-1)];$('questTitle').textContent=q?'Missão: '+q.name:'Livre';$('questText').textContent=q?'Derrote 5 inimigos nesta ilha ('+Math.min(s.progress,5)+'/5). Recompensa: moedas e EXP.':'';$('hakiArm').classList.toggle('hakiOn',s.hakiArm);$('hakiObs').classList.toggle('hakiOn',s.hakiObs)}
-function resize(){var r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0)}
-function screen(x,y){var r=canvas.getBoundingClientRect();return{x:r.width/2+(x-cam.x),y:r.height/2+(y-cam.y)}}
-function draw(){var r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ctx.fillStyle=seaOf(p.x)===1?'#218eae':'#176e9c';ctx.fillRect(0,0,r.width,r.height);
-ctx.save();ctx.translate(r.width/2-cam.x,r.height/2-cam.y);
-islands.forEach(function(q,i){if(Math.abs(q.x-cam.x)>r.width/2+q.rx+100||Math.abs(q.y-cam.y)>r.height/2+q.ry+100)return;ctx.fillStyle=q.sea===1?'#dfcf91':'#d6c487';ctx.beginPath();ctx.ellipse(q.x,q.y,q.rx,q.ry,0,0,TAU);ctx.fill();ctx.fillStyle=i%3===1?'#4f9c69':i%3===2?'#b99062':'#68a86b';ctx.beginPath();ctx.ellipse(q.x,q.y,q.rx*.86,q.ry*.82,0,0,TAU);ctx.fill();ctx.fillStyle='#ffffffcc';ctx.font='bold 18px Georgia';ctx.textAlign='center';ctx.fillText(q.name,q.x,q.y-q.ry*.7);ctx.font='11px system-ui';ctx.fillText('Nv. '+q.min+'+',q.x,q.y-q.ry*.7+18)});
-enemies.forEach(function(e){if(e.hp<=0||seaOf(p.x)!==islands[e.home].sea)return;if(Math.abs(e.x-cam.x)>r.width/2+80||Math.abs(e.y-cam.y)>r.height/2+80)return;ctx.fillStyle=e.hit>0?'#fff':e.boss?'#7a2336':'#263948';ctx.beginPath();ctx.arc(e.x,e.y,e.boss?24:15,0,TAU);ctx.fill();ctx.strokeStyle=e.boss?'#ffd166':'#ffffff55';ctx.stroke();ctx.fillStyle='#111b';ctx.fillRect(e.x-28,e.y-(e.boss?38:29),56,5);ctx.fillStyle=e.boss?'#ff7373':'#75dc94';ctx.fillRect(e.x-28,e.y-(e.boss?38:29),56*e.hp/e.max,5)});
-projectiles.forEach(function(pr){ctx.fillStyle=pr.c;ctx.beginPath();ctx.arc(pr.x,pr.y,9,0,TAU);ctx.fill()});fx.forEach(function(f){ctx.strokeStyle=f.c;ctx.globalAlpha=clamp(f.t/.45,0,1);ctx.lineWidth=5;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1-f.t/.45*.35),0,TAU);ctx.stroke();ctx.globalAlpha=1});
-ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.fillStyle=s.boat?'#9c6a3c':'#f1d6a0';if(s.boat){ctx.fillRect(-22,-12,44,24);ctx.fillStyle='#fff1c4';ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(0,-45);ctx.lineTo(30,-10);ctx.fill()}else{ctx.beginPath();ctx.arc(0,0,14,0,TAU);ctx.fill();if(s.hakiArm){ctx.strokeStyle='#241b2f';ctx.lineWidth=6;ctx.stroke()}ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(10,0);ctx.lineTo(33,0);ctx.stroke()}ctx.restore();
-if(s.hakiObs){ctx.strokeStyle='#ffd16677';enemies.forEach(function(e){if(e.hp>0&&dist(e,p)<650){ctx.beginPath();ctx.arc(e.x,e.y,e.boss?32:22,0,TAU);ctx.stroke()}})}
-ctx.restore();
-var near=enemies.filter(function(e){return e.boss&&e.hp>0&&dist(e,p)<650})[0];$('bossBox').style.display=near?'block':'none';if(near){$('bossName').textContent=islands[near.home].boss;$('bossHpText').textContent=Math.ceil(near.hp)+' / '+near.max;$('bossBar').style.width=near.hp/near.max*100+'%'}}
-function loop(t){var dt=Math.min(.04,(t-last)/1000||.016);last=t;if(!modal)update(dt);draw();requestAnimationFrame(loop)}
+function buildProps(){
+  props=[];
+  islands.forEach((q,i)=>{
+    let count=q.sea===2?34:26;
+    for(let j=0;j<count;j++){
+      let a=rnd(i*100+j)*TAU,rr=.15+rnd(i*300+j)*.58;
+      let x=q.x+Math.cos(a)*q.rx*rr,y=q.y+Math.sin(a)*q.ry*rr;
+      let type='tree';
+      if(q.biome==='desert')type=rnd(j+i)<.58?'cactus':'rock';
+      else if(q.biome==='ice'||q.biome==='frostfire')type=rnd(j+i)<.55?'pine':'crystal';
+      else if(q.biome==='grave')type=rnd(j+i)<.48?'grave':'dead';
+      else if(q.biome==='wreck')type=rnd(j+i)<.5?'wreck':'rock';
+      else if(rnd(j+i)<.25)type='rock';
+      props.push({x,y,type,i,scale:.7+rnd(j*7+i)*.7});
+    }
+    for(let h=0;h<(q.sea===2?5:3);h++){
+      let a=(h/(q.sea===2?5:3))*TAU+.4,x=q.x+Math.cos(a)*q.rx*.32,y=q.y+Math.sin(a)*q.ry*.25;
+      props.push({x,y,type:q.biome==='grave'?'crypt':q.biome==='wreck'?'wreck':'house',i,scale:1});
+    }
+    props.push({x:q.x+q.rx*.78,y:q.y+q.ry*.08,type:'dock',i,scale:1});
+  });
+}
+function spawn(){enemies=[];for(let i=0;i<islands.length;i++){let q=islands[i];for(let j=0;j<7;j++){let a=j/7*TAU+.35,enHp=85+i*70;enemies.push({x:q.x+Math.cos(a)*q.rx*.48,y:q.y+Math.sin(a)*q.ry*.40,home:i,hp:enHp,max:enHp,boss:false,resp:0,hit:0})}let bh=430+i*330;enemies.push({x:q.x+q.rx*.2,y:q.y-q.ry*.32,home:i,hp:bh,max:bh,boss:true,resp:0,hit:0})}}
+buildProps();spawn();
+function gainXp(n){s.xp+=n;while(s.xp>=needXp()&&s.level<200){s.xp-=needXp();s.level++;p.hp=maxHp();p.en=maxEn();toast('LEVEL UP • Nível '+s.level,'good');fx.push({type:'level',x:p.x,y:p.y,r:100,t:.7,c:'#ffd36f'})}save()}
+function damageMul(){let g=s.equipment&&gear[s.equipment];return(g&&g.dmg||1)*(s.hakiArm?1.28:1)}
+function hitEnemy(e,d){if(e.hp<=0)return;e.hp=Math.max(0,e.hp-d*damageMul());e.hit=.11;for(let j=0;j<4;j++)fx.push({type:'spark',x:e.x+(Math.random()-.5)*18,y:e.y+(Math.random()-.5)*18,r:4,t:.25,c:'#ffe7a3'});if(e.hp<=0)kill(e)}
+function finishQuest(i){
+  let rewardC=260+i*115,rewardX=180+i*90;s.coins+=rewardC;gainXp(rewardX);toast('Missão concluída! +◈ '+rewardC+' • +'+rewardX+' EXP','good');
+  if(s.quest<islands.length-1)s.quest++;s.progress=0;save()
+}
+function kill(e){
+  let i=e.home,q=islands[i];s.coins+=e.boss?450+i*160:35+i*12;gainXp(e.boss?260+i*120:45+i*18);e.resp=e.boss?40:12;
+  if(s.quest===i&&s.progress<5){s.progress++;if(s.progress>=5)finishQuest(i)}
+  if(e.boss&&!s.bosses.includes(i)){s.bosses.push(i);if(!s.ownedGear.includes(q.drop)){s.ownedGear.push(q.drop);toast('DROP DE BOSS • '+q.drop,'good')}
+    if(i%2===0&&s.weapon<swords.length-1){let wi=Math.min(swords.length-1,Math.floor(i/2)+1);if(!s.ownedWeapons.includes(wi)){s.ownedWeapons.push(wi);toast('NOVA ESPADA • '+swords[wi],'good')}}}
+  fx.push({type:'burst',x:e.x,y:e.y,r:e.boss?130:65,t:.65,c:e.boss?'#ff8b74':'#ffd36f'});save()
+}
+function attack(){if(p.atk>0||s.boat)return;p.atk=.23;let best=null,bd=112;enemies.forEach(e=>{let d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});fx.push({type:'slash',x:p.x+Math.cos(p.angle)*25,y:p.y+Math.sin(p.angle)*25,r:46,t:.2,c:s.hakiArm?'#9a7cff':'#fff1b7',a:p.angle});if(best){p.angle=Math.atan2(best.y-p.y,best.x-p.x);hitEnemy(best,24+s.level*1.8+s.weapon*9)}}
+function fruitColor(f){return['#d9dde0','#79dd9f','#69cfff','#aa8cff','#ffb95d'][Math.max(0,(rarity[f]||1)-1)]}
+function skill(k){
+  if(p.cd[k]>0||s.boat)return;let cost=[18,34,52][k];if(p.en<cost){toast('Energia insuficiente','bad');return}p.en-=cost;p.cd[k]=[1.2,5,10][k];
+  let radius=[260,205,300][k],base=(30+s.level*3)*(1+k*.82)*(1+(rarity[s.fruit]||1)*.09),color=fruitColor(s.fruit),best=null,bd=760;
+  enemies.forEach(e=>{let d=dist(p,e);if(e.hp>0&&d<bd){best=e;bd=d}});
+  if(k===0){let a=best?Math.atan2(best.y-p.y,best.x-p.x):p.angle;projectiles.push({x:p.x,y:p.y,vx:Math.cos(a)*590,vy:Math.sin(a)*590,t:1.35,d:base,c:color,r:11})}
+  else{enemies.forEach(e=>{if(e.hp>0&&dist(p,e)<radius)hitEnemy(e,base)});fx.push({type:k===1?'ring':'domain',x:p.x,y:p.y,r:radius,t:k===1?.55:.9,c:color})}
+}
+function dash(){if(p.dashCd>0||p.en<12)return;p.en-=12;p.dash=.16;p.dashCd=1.2;p.inv=.25;fx.push({type:'dash',x:p.x,y:p.y,r:55,t:.28,c:'#bcefff',a:p.angle})}
+function hurt(n){if(p.inv>0||s.boat)return;if(s.hakiObs&&Math.random()<.32){p.inv=.4;fx.push({type:'ring',x:p.x,y:p.y,r:70,t:.35,c:'#ffd36f'});toast('Observação • esquiva!');return}p.hp-=n;p.inv=.65;if(p.hp<=0){let q=islands[Math.max(0,s.visited[s.visited.length-1]||0)];p.x=q.x;p.y=q.y;p.hp=maxHp();p.en=maxEn();s.boat=false;toast('Você reapareceu na última ilha.','bad')}save()}
+function update(dt){
+  worldTime+=dt;p.atk=Math.max(0,p.atk-dt);p.inv=Math.max(0,p.inv-dt);p.dash=Math.max(0,p.dash-dt);p.dashCd=Math.max(0,p.dashCd-dt);for(let c=0;c<3;c++)p.cd[c]=Math.max(0,p.cd[c]-dt);p.en=Math.min(maxEn(),p.en+18*dt);
+  let mx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+joy.x,my=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0)+joy.y,l=Math.hypot(mx,my);
+  if(l>0){mx/=l;my/=l;p.angle=Math.atan2(my,mx);let sp=(s.boat?280:185)*(p.dash>0?2.5:1),nx=clamp(p.x+mx*sp*dt,25,WORLD.w-25),ny=clamp(p.y+my*sp*dt,25,WORLD.h-25);
+    if(s.level<50&&nx>8000){nx=7985;if(p.x<7970)toast('O 2º Sea libera no nível 50.','bad')}
+    let land=islandAt(nx,ny);if(s.boat||land>=0){p.x=nx;p.y=ny}}
+  let ii=islandAt(p.x,p.y);if(ii!==lastIsland){lastIsland=ii;if(ii>=0){if(!s.visited.includes(ii)){s.visited.push(ii);toast('DESCOBERTA • '+islands[ii].name,'good');save()}showLocation(ii)}}
+  if(locationTimer>0){locationTimer-=dt;if(locationTimer<=0)$('locationBanner').classList.remove('show')}
+  projectiles.forEach(pr=>{pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.t-=dt;for(let e of enemies){if(e.hp>0&&Math.hypot(e.x-pr.x,e.y-pr.y)<38){hitEnemy(e,pr.d);fx.push({type:'burst',x:pr.x,y:pr.y,r:55,t:.4,c:pr.c});pr.t=0;break}}});projectiles=projectiles.filter(q=>q.t>0);
+  enemies.forEach(e=>{e.hit=Math.max(0,e.hit-dt);if(e.hp<=0){e.resp-=dt;if(e.resp<=0){let q=islands[e.home];e.x=q.x+(Math.random()-.5)*q.rx*.76;e.y=q.y+(Math.random()-.5)*q.ry*.68;e.hp=e.max}return}
+    if(seaOf(p.x)!==islands[e.home].sea)return;let d=dist(e,p);if(d<350&&!s.boat){let a=Math.atan2(p.y-e.y,p.x-e.x);e.x+=Math.cos(a)*(e.boss?60:76)*dt;e.y+=Math.sin(a)*(e.boss?60:76)*dt;if(d<43&&Math.random()<dt*1.4)hurt(e.boss?26+e.home*3:12+e.home*2)}})
+  fx.forEach(f=>f.t-=dt);fx=fx.filter(f=>f.t>0);cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);
+  hudTimer+=dt;if(hudTimer>.12){hudTimer=0;hud();drawMinimap()}
+}
+function showLocation(i){let q=islands[i];$('locationName').textContent=q.name;$('locationSub').textContent=q.sea+'º SEA • NÍVEL '+q.min+'+';$('locationBanner').classList.add('show');locationTimer=2.4}
+function hud(){
+  let q=islands[Math.min(s.quest,islands.length-1)],ii=islandAt(p.x,p.y),loc=ii>=0?islands[ii]:null,icon=fruitIcon[s.fruit]||'✦';
+  $('level').textContent='Nv. '+s.level;$('coins').textContent=Math.floor(s.coins).toLocaleString('pt-BR');$('hpText').textContent=Math.max(0,Math.floor(p.hp))+' / '+maxHp();$('enText').textContent=Math.floor(p.en)+' / '+maxEn();
+  $('hpBar').style.width=clamp(p.hp/maxHp()*100,0,100)+'%';$('enBar').style.width=clamp(p.en/maxEn()*100,0,100)+'%';$('xpText').textContent=Math.floor(s.xp)+' / '+needXp();$('xpBar').style.width=clamp(s.xp/needXp()*100,0,100)+'%';
+  $('seaLabel').textContent=seaOf(p.x)+'º Sea';$('miniSea').textContent='SEA '+seaOf(p.x);$('weaponName').textContent=swords[s.weapon];$('fruitAvatar').textContent=icon;$('fruitMini').textContent=icon;$('fruitName').textContent=s.fruit;
+  $('islandTop').textContent=loc?loc.name:'Oceano aberto';$('questTitle').textContent=q?q.name:'Livre';$('questText').textContent=q?'Derrote 5 inimigos desta ilha e avance sua jornada pelo mar.':'Explore livremente.';
+  $('questLevel').textContent=q?'Nv. recomendado '+q.min+'+':'';$('questCount').textContent=Math.min(s.progress,5)+'/5';$('questProgress').style.width=Math.min(100,s.progress/5*100)+'%';
+  $('hakiArm').classList.toggle('hakiOn',s.hakiArm);$('hakiObs').classList.toggle('hakiOn',s.hakiObs)
+}
+function resize(){let r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0);mini.width=336;mini.height=252}
+function ocean(r){
+  let g=ctx.createLinearGradient(0,0,0,r.height);g.addColorStop(0,seaOf(p.x)===1?'#42b6d0':'#318eb8');g.addColorStop(1,seaOf(p.x)===1?'#176f91':'#154f78');ctx.fillStyle=g;ctx.fillRect(0,0,r.width,r.height);
+  ctx.save();ctx.globalAlpha=.16;ctx.strokeStyle='#d9fbff';ctx.lineWidth=1;
+  let ox=(worldTime*28)%70,oy=(worldTime*12)%55;for(let y=-55+oy;y<r.height+55;y+=55){for(let x=-70+ox;x<r.width+70;x+=70){ctx.beginPath();ctx.arc(x,y,17,Math.PI*.12,Math.PI*.84);ctx.stroke()}}
+  ctx.globalAlpha=.08;ctx.strokeStyle='#fff';for(let y=-30+oy*.4;y<r.height;y+=95){ctx.beginPath();ctx.moveTo(0,y);for(let x=0;x<r.width+40;x+=40)ctx.quadraticCurveTo(x+10,y+Math.sin((x+y+worldTime*20)*.02)*6,x+20,y);ctx.stroke()}ctx.restore()
+}
+function ellipse(x,y,rx,ry,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,TAU);ctx.fill()}
+function drawIsland(q,i){
+  ctx.save();
+  ctx.globalAlpha=.25;ellipse(q.x+28,q.y+34,q.rx*1.02,q.ry*.98,'#052c3d');ctx.globalAlpha=1;
+  ellipse(q.x,q.y,q.rx*1.04,q.ry*1.04,'#eef2d5');ellipse(q.x,q.y,q.rx,q.ry,q.c1);ellipse(q.x,q.y,q.rx*.90,q.ry*.86,q.c2);
+  ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.setLineDash([16,20]);ctx.beginPath();ctx.ellipse(q.x,q.y,q.rx*1.07,q.ry*1.07,0,0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  if(q.biome==='desert'){ctx.strokeStyle='#e8c87355';ctx.lineWidth=6;for(let k=-2;k<=2;k++){ctx.beginPath();ctx.arc(q.x+k*95,q.y+30,k%2?170:210,.1,2.4);ctx.stroke()}}
+  if(q.biome==='ice'||q.biome==='frostfire'){ctx.globalAlpha=.23;ellipse(q.x-q.rx*.26,q.y-q.ry*.18,q.rx*.28,q.ry*.18,'#ffffff');ellipse(q.x+q.rx*.22,q.y+q.ry*.17,q.rx*.23,q.ry*.15,'#fff');ctx.globalAlpha=1}
+  if(q.biome==='rose'){ctx.globalAlpha=.25;for(let k=0;k<12;k++){let a=k/12*TAU,rr=.42;ellipse(q.x+Math.cos(a)*q.rx*rr,q.y+Math.sin(a)*q.ry*rr,35,18,'#dc7e9e')}ctx.globalAlpha=1}
+  ctx.fillStyle='#fff7df';ctx.font='700 18px Georgia';ctx.textAlign='center';ctx.shadowColor='#042638';ctx.shadowBlur=7;ctx.fillText(q.name,q.x,q.y-q.ry*.68);ctx.shadowBlur=0;ctx.font='700 9px Inter,system-ui';ctx.fillStyle='#eaf3ee';ctx.fillText('NÍVEL '+q.min+'+',q.x,q.y-q.ry*.68+16);ctx.restore()
+}
+function drawProp(o){
+  ctx.save();ctx.translate(o.x,o.y);ctx.scale(o.scale,o.scale);
+  if(o.type==='tree'||o.type==='pine'){ctx.fillStyle='#5e4330';ctx.fillRect(-3,-3,6,18);ctx.fillStyle=o.type==='pine'?'#315f52':'#327153';for(let k=0;k<3;k++){ctx.beginPath();ctx.arc((k-1)*6,-6-k*4,10-k,0,TAU);ctx.fill()}if(o.type==='tree'){ctx.fillStyle='#4c8e58';ctx.beginPath();ctx.arc(0,-8,14,0,TAU);ctx.fill()}}
+  else if(o.type==='rock'){ellipse(0,2,10,7,'#667574');ellipse(-2,0,7,4,'#89918b')}
+  else if(o.type==='cactus'){ctx.strokeStyle='#437d58';ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,10);ctx.lineTo(0,-10);ctx.moveTo(0,-2);ctx.lineTo(-8,-7);ctx.moveTo(0,2);ctx.lineTo(7,-3);ctx.stroke()}
+  else if(o.type==='crystal'){ctx.fillStyle='#9fe9ff';ctx.beginPath();ctx.moveTo(0,-15);ctx.lineTo(8,4);ctx.lineTo(1,11);ctx.lineTo(-7,4);ctx.closePath();ctx.fill()}
+  else if(o.type==='grave'){ctx.fillStyle='#737975';ctx.fillRect(-6,-7,12,15);ctx.beginPath();ctx.arc(0,-7,6,Math.PI,TAU);ctx.fill()}
+  else if(o.type==='dead'){ctx.strokeStyle='#61564d';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,10);ctx.lineTo(0,-12);ctx.moveTo(0,-6);ctx.lineTo(-9,-12);ctx.moveTo(0,-3);ctx.lineTo(10,-8);ctx.stroke()}
+  else if(o.type==='house'||o.type==='crypt'){ctx.fillStyle=o.type==='crypt'?'#545e5b':'#d6b072';ctx.fillRect(-18,-10,36,24);ctx.fillStyle=o.type==='crypt'?'#343c3b':'#7d4e37';ctx.beginPath();ctx.moveTo(-22,-10);ctx.lineTo(0,-28);ctx.lineTo(22,-10);ctx.fill();ctx.fillStyle='#3a2920';ctx.fillRect(-4,2,8,12)}
+  else if(o.type==='wreck'){ctx.strokeStyle='#72513a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-16,8);ctx.lineTo(18,-8);ctx.moveTo(-14,-7);ctx.lineTo(15,10);ctx.stroke()}
+  else if(o.type==='dock'){ctx.fillStyle='#765439';for(let k=-2;k<=2;k++)ctx.fillRect(k*12,-5,10,36);ctx.fillStyle='#4c382a';ctx.fillRect(-32,28,64,5)}
+  ctx.restore()
+}
+function drawEnemy(e){
+  let q=islands[e.home],boss=e.boss,rr=boss?23:15;
+  ctx.save();ctx.translate(e.x,e.y);
+  ctx.globalAlpha=.22;ellipse(2,13,rr*1.1,rr*.42,'#00141d');ctx.globalAlpha=1;
+  ctx.fillStyle=e.hit>0?'#fff':boss?'#78384d':q.biome==='ice'?'#5f7f91':'#344b56';ctx.beginPath();ctx.arc(0,0,rr,0,TAU);ctx.fill();
+  ctx.fillStyle=boss?'#ffd37a':'#e4d6b5';ctx.beginPath();ctx.arc(0,-rr*.35,rr*.52,0,TAU);ctx.fill();ctx.fillStyle='#14232a';ellipse(-5,-rr*.38,2,2,'#14232a');ellipse(5,-rr*.38,2,2,'#14232a');
+  if(boss){ctx.strokeStyle='#ffd36f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,rr+4,0,TAU);ctx.stroke()}
+  ctx.fillStyle='#06151dcc';ctx.fillRect(-28,-rr-15,56,5);ctx.fillStyle=boss?'#ff7777':'#73df98';ctx.fillRect(-28,-rr-15,56*e.hp/e.max,5);ctx.restore()
+}
+function drawPlayer(){
+  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);
+  if(s.boat){ctx.globalAlpha=.18;ellipse(3,15,28,10,'#00151f');ctx.globalAlpha=1;ctx.fillStyle='#8b603d';ctx.beginPath();ctx.moveTo(-28,-11);ctx.lineTo(29,-11);ctx.lineTo(19,15);ctx.lineTo(-18,15);ctx.closePath();ctx.fill();ctx.fillStyle='#5c3e2d';ctx.fillRect(-2,-38,4,29);ctx.fillStyle='#fff0c6';ctx.beginPath();ctx.moveTo(1,-37);ctx.lineTo(1,-10);ctx.lineTo(27,-10);ctx.closePath();ctx.fill();ctx.strokeStyle='#d9bc82';ctx.stroke()}
+  else{ctx.globalAlpha=.2;ellipse(2,13,17,6,'#00151f');ctx.globalAlpha=1;ctx.fillStyle='#173f50';ctx.fillRect(-10,-4,20,20);ctx.fillStyle='#f1d2a1';ctx.beginPath();ctx.arc(0,-8,10,0,TAU);ctx.fill();ctx.fillStyle='#14242d';ellipse(-3,-10,1.5,1.5,'#14242d');ellipse(3,-10,1.5,1.5,'#14242d');
+    ctx.strokeStyle=s.hakiArm?'#8b70d8':'#e9eef0';ctx.lineWidth=s.hakiArm?7:4;ctx.beginPath();ctx.moveTo(9,1);ctx.lineTo(32,0);ctx.stroke();if(s.hakiArm){ctx.strokeStyle='#c7afff66';ctx.lineWidth=2;ctx.stroke()}
+    let fc=fruitColor(s.fruit);ctx.strokeStyle=fc;ctx.globalAlpha=.35;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,20+Math.sin(worldTime*4)*2,0,TAU);ctx.stroke();ctx.globalAlpha=1}
+  ctx.restore()
+}
+function drawFX(){
+  projectiles.forEach(pr=>{ctx.save();ctx.shadowColor=pr.c;ctx.shadowBlur=18;ellipse(pr.x,pr.y,pr.r,pr.r,pr.c);ellipse(pr.x-3,pr.y-3,pr.r*.42,pr.r*.42,'#fff8df');ctx.restore()});
+  fx.forEach(f=>{let a=clamp(f.t/.7,0,1);ctx.save();ctx.globalAlpha=Math.min(1,a*1.7);ctx.strokeStyle=f.c;ctx.fillStyle=f.c;
+    if(f.type==='spark')ellipse(f.x,f.y,f.r*a,f.r*a,f.c);
+    else if(f.type==='slash'){ctx.lineWidth=7*a+2;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1.15-a*.15),f.a-.9,f.a+.9);ctx.stroke()}
+    else if(f.type==='dash'){ctx.lineWidth=5*a;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1-a*.5),0,TAU);ctx.stroke()}
+    else{let progress=1-a,rad=f.r*(.35+.65*progress);ctx.lineWidth=(f.type==='domain'?12:7)*a+1;ctx.beginPath();ctx.arc(f.x,f.y,rad,0,TAU);ctx.stroke();ctx.globalAlpha=.07*a;ellipse(f.x,f.y,rad,rad,f.c)}
+    ctx.restore()})
+}
+function draw(){
+  let r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.width,r.height);ocean(r);ctx.save();ctx.translate(r.width/2-cam.x,r.height/2-cam.y);
+  let vw=r.width,vh=r.height;islands.forEach((q,i)=>{if(Math.abs(q.x-cam.x)<vw/2+q.rx+120&&Math.abs(q.y-cam.y)<vh/2+q.ry+120)drawIsland(q,i)});
+  let visible=o=>Math.abs(o.x-cam.x)<vw/2+120&&Math.abs(o.y-cam.y)<vh/2+120;
+  let drawables=[];props.forEach(o=>{if(visible(o))drawables.push({y:o.y,fn:()=>drawProp(o)})});enemies.forEach(e=>{if(e.hp>0&&visible(e)&&islands[e.home].sea===seaOf(p.x))drawables.push({y:e.y,fn:()=>drawEnemy(e)})});drawables.push({y:p.y,fn:drawPlayer});drawables.sort((a,b)=>a.y-b.y).forEach(o=>o.fn());
+  if(s.hakiObs){ctx.save();ctx.strokeStyle='#ffd36f88';ctx.setLineDash([6,5]);enemies.forEach(e=>{if(e.hp>0&&dist(e,p)<650){ctx.beginPath();ctx.arc(e.x,e.y,e.boss?34:23,0,TAU);ctx.stroke()}});ctx.restore()}
+  drawFX();ctx.restore();
+  let near=enemies.find(e=>e.boss&&e.hp>0&&dist(e,p)<680);$('bossBox').style.display=near?'block':'none';if(near){$('bossName').textContent=islands[near.home].boss;$('bossHpText').textContent=Math.ceil(near.hp)+' / '+near.max;$('bossBar').style.width=near.hp/near.max*100+'%'}
+}
+function drawMinimap(){
+  let w=mini.width,h=mini.height;mctx.clearRect(0,0,w,h);let sea=seaOf(p.x),seaIs=islands.filter(q=>q.sea===sea),minX=Math.min(...seaIs.map(q=>q.x-q.rx)),maxX=Math.max(...seaIs.map(q=>q.x+q.rx)),minY=Math.min(...seaIs.map(q=>q.y-q.ry)),maxY=Math.max(...seaIs.map(q=>q.y+q.ry));
+  let sx=w/(maxX-minX+700),sy=h/(maxY-minY+500),sc=Math.min(sx,sy),ox=(w-(maxX-minX)*sc)/2-minX*sc,oy=(h-(maxY-minY)*sc)/2-minY*sc;
+  let g=mctx.createLinearGradient(0,0,0,h);g.addColorStop(0,sea===1?'#2d96b4':'#257aa2');g.addColorStop(1,sea===1?'#105b7e':'#103f69');mctx.fillStyle=g;mctx.fillRect(0,0,w,h);
+  seaIs.forEach(q=>{mctx.fillStyle=q.c1;mctx.beginPath();mctx.ellipse(q.x*sc+ox,q.y*sc+oy,q.rx*sc,q.ry*sc,0,0,TAU);mctx.fill();mctx.fillStyle=q.c2;mctx.beginPath();mctx.ellipse(q.x*sc+ox,q.y*sc+oy,q.rx*sc*.82,q.ry*sc*.8,0,0,TAU);mctx.fill()});
+  mctx.fillStyle='#ffd36f';mctx.beginPath();mctx.arc(p.x*sc+ox,p.y*sc+oy,6,0,TAU);mctx.fill();mctx.strokeStyle='#fff';mctx.lineWidth=2;mctx.stroke()
+}
+function loop(t){let dt=Math.min(.04,(t-last)/1000||.016);last=t;if(!modal)update(dt);draw();requestAnimationFrame(loop)}
 function openModal(title,body){modal=true;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalShade').classList.add('open')}
-function closeModal(){modal=false;$('modalShade').classList.remove('open');save()}
-function bag(){var f=s.ownedFruits.map(function(n){return'<div class="item"><span class="tag">Raridade '+rarity[n]+'</span><h3>'+(fruitIcon[n]||'✦')+' '+n+'</h3><button data-equip-fruit="'+n+'" '+(s.fruit===n?'disabled':'')+'>'+(s.fruit===n?'Equipada':'Equipar')+'</button></div>'}).join('');
-var w=s.ownedWeapons.map(function(i){return'<div class="item"><h3>⚔ '+swords[i]+'</h3><button data-equip-weapon="'+i+'" '+(s.weapon===i?'disabled':'')+'>'+(s.weapon===i?'Equipada':'Equipar')+'</button></div>'}).join('');
-var g=s.ownedGear.map(function(n){return'<div class="item"><h3>◆ '+n+'</h3><p>Boost de boss.</p><button data-equip-gear="'+n+'" '+(s.equipment===n?'disabled':'')+'>'+(s.equipment===n?'Equipado':'Equipar')+'</button></div>'}).join('');
-openModal('Mochila','<h3>Frutas</h3><div class="grid">'+f+'</div><h3>Espadas</h3><div class="grid">'+w+'</div><h3>Equipamentos de bosses</h3><div class="grid">'+(g||'<p class="small">Derrote bosses para obter equipamentos.</p>')+'</div>')}
-function spin(){var cost=500+Math.floor(s.level/20)*150;if(s.coins<cost){toast('Você precisa de ◈ '+cost,'bad');return}var pool=[];fruits.forEach(function(f){var rr=rarity[f]||1,w=Math.max(1,8-rr);for(var i=0;i<w*w;i++)pool.push(f)});var f=pool[Math.floor(Math.random()*pool.length)];s.coins-=cost;if(!s.ownedFruits.includes(f))s.ownedFruits.push(f);s.fruit=f;toast('Você girou: '+f+'!','good');save();hud()}
-function map(){var cards=islands.map(function(q,i){var lock=s.level<q.min;return'<div class="item"><span class="tag">'+q.sea+'º Sea</span><h3>'+q.name+'</h3><p>Nível '+q.min+'+ · Boss: '+q.boss+'</p><button data-travel="'+i+'" '+(lock?'disabled':'')+'>'+(lock?'Bloqueada':'Marcar/ir')+'</button></div>'}).join('');openModal('Mapa dos Mares','<div class="grid">'+cards+'</div><p class="small">O 2º Sea começa no nível 50 e possui ilhas maiores e mais distantes.</p>')}
-$('modalBody').addEventListener('click',function(e){var t=e.target;if(t.dataset.equipFruit){s.fruit=t.dataset.equipFruit;save();bag()}if(t.dataset.equipWeapon!==undefined){s.weapon=+t.dataset.equipWeapon;save();bag()}if(t.dataset.equipGear){s.equipment=t.dataset.equipGear;p.hp=Math.min(p.hp,maxHp());p.en=Math.min(p.en,maxEn());save();bag()}if(t.dataset.travel!==undefined){var i=+t.dataset.travel,q=islands[i];if(s.level>=q.min){p.x=q.x;p.y=q.y;s.boat=false;closeModal();toast('Chegou em '+q.name)}}});
-$('bagBtn').onclick=bag;$('spinBtn').onclick=spin;$('mapBtn').onclick=map;$('modalClose').onclick=closeModal;$('attackBtn').onclick=attack;$('dashBtn').onclick=dash;document.querySelectorAll('[data-skill]').forEach(function(b){b.onclick=function(){skill(+b.dataset.skill)}});
-$('boatBtn').onclick=function(){var sea=seaOf(p.x);if(sea===1&&s.level<50&&p.x>7600){toast('Alcance nível 50 para o 2º Sea','bad');return}s.boat=!s.boat;toast(s.boat?'Barco chamado. Navegue pelo oceano.':'Você desembarcou.');save()};
-function hakiArm(){s.hakiArm=!s.hakiArm;toast('Haki do Armamento '+(s.hakiArm?'ativado':'desativado'));save();hud()}function hakiObs(){s.hakiObs=!s.hakiObs;toast('Haki da Observação '+(s.hakiObs?'ativado':'desativado'));save();hud()}
+function closeModal(){modal=false;spinBusy=false;$('modalShade').classList.remove('open');save()}
+function rarityClass(n){return'r'+(rarity[n]||1)}
+function bag(){
+  let f=s.ownedFruits.map(n=>'<div class="item"><span class="tag '+rarityClass(n)+'">'+rarityName[rarity[n]]+'</span><h3>'+(fruitIcon[n]||'✦')+' '+n+'</h3><p>Poder elemental. Raridade '+rarity[n]+'/5.</p><button data-equip-fruit="'+n+'" '+(s.fruit===n?'disabled':'')+'>'+(s.fruit===n?'Equipada':'Equipar fruta')+'</button></div>').join('');
+  let w=s.ownedWeapons.map(i=>'<div class="item"><span class="tag">ESPADA</span><h3>⚔ '+swords[i]+'</h3><p>Dano base aumenta conforme a espada equipada.</p><button data-equip-weapon="'+i+'" '+(s.weapon===i?'disabled':'')+'>'+(s.weapon===i?'Equipada':'Equipar espada')+'</button></div>').join('');
+  let g=s.ownedGear.map(n=>{let b=gear[n]||{};return'<div class="item"><span class="tag">DROP DE BOSS</span><h3>◆ '+n+'</h3><p>'+(b.hp?'+'+b.hp+' HP ':'')+(b.en?'+'+b.en+' energia ':'')+(b.dmg?'• bônus de dano':'')+'</p><button data-equip-gear="'+n+'" '+(s.equipment===n?'disabled':'')+'>'+(s.equipment===n?'Equipado':'Equipar')+'</button></div>'}).join('');
+  openModal('Mochila','<div class="sectionTitle">Frutas</div><div class="grid">'+f+'</div><div class="sectionTitle">Espadas</div><div class="grid">'+w+'</div><div class="sectionTitle">Equipamentos</div><div class="grid">'+(g||'<div class="item"><h3>Nenhum equipamento ainda</h3><p>Derrote bosses para conseguir drops especiais.</p></div>')+'</div>')
+}
+function spinMenu(){
+  let cost=500+Math.floor(s.level/20)*150;openModal('Giro de Fruta','<div class="spinStage"><span class="eyebrow">MERCADOR MISTERIOSO</span><div class="spinMachine"><div><div class="spinFruit" id="spinFruit">✦</div><div class="spinName" id="spinName">Fruta misteriosa</div></div></div><div class="spinCost">Custo do giro: <b class="gold">◈ '+cost.toLocaleString('pt-BR')+'</b> • Seu saldo: ◈ '+Math.floor(s.coins).toLocaleString('pt-BR')+'</div><button class="primaryBtn" data-spin="1" '+(s.coins<cost?'disabled':'')+'>GIRAR FRUTA</button></div>')
+}
+function doSpin(btn){
+  if(spinBusy)return;let cost=500+Math.floor(s.level/20)*150;if(s.coins<cost){toast('Moedas insuficientes','bad');return}spinBusy=true;btn.disabled=true;s.coins-=cost;
+  let pool=[];fruits.forEach(f=>{let rr=rarity[f]||1,w=Math.max(1,8-rr);for(let i=0;i<w*w;i++)pool.push(f)});
+  let ticks=0,total=24+Math.floor(Math.random()*10),el=$('spinFruit'),nm=$('spinName'),timer=setInterval(()=>{let f=pool[Math.floor(Math.random()*pool.length)];if(el)el.textContent=fruitIcon[f]||'✦';if(nm)nm.textContent=f;ticks++;if(ticks>=total){clearInterval(timer);let f=pool[Math.floor(Math.random()*pool.length)];if(!s.ownedFruits.includes(f))s.ownedFruits.push(f);s.fruit=f;if(el)el.textContent=fruitIcon[f]||'✦';if(nm){nm.textContent=f+' • '+rarityName[rarity[f]];nm.className='spinName '+rarityClass(f)}toast('VOCÊ GIROU • '+f,'good');spinBusy=false;save();hud();setTimeout(()=>spinMenu(),900)}},75+ticks*3)
+}
+function map(){
+  let cards='';[1,2].forEach(sea=>{cards+='<div class="mapSea">'+sea+'º Sea</div><div class="grid">';islands.forEach((q,i)=>{if(q.sea!==sea)return;let lock=s.level<q.min;cards+='<div class="item '+(lock?'locked':'')+'"><span class="tag">'+q.biome.toUpperCase()+'</span><h3>'+q.name+'</h3><p>Nível '+q.min+'+<br>Boss: '+q.boss+'<br>Drop: '+q.drop+'</p><button data-travel="'+i+'" '+(lock?'disabled':'')+'>'+(lock?'Bloqueada':'Viajar')+'</button></div>'});cards+='</div>'});openModal('Mapa dos Mares',cards+'<p class="tiny" style="margin-top:16px">O 2º Sea começa no nível 50. Suas ilhas são maiores e ficam mais distantes entre si.</p>')
+}
+$('modalBody').addEventListener('click',e=>{let t=e.target;if(t.dataset.spin)doSpin(t);if(t.dataset.equipFruit){s.fruit=t.dataset.equipFruit;save();hud();bag()}if(t.dataset.equipWeapon!==undefined){s.weapon=+t.dataset.equipWeapon;save();hud();bag()}if(t.dataset.equipGear){s.equipment=t.dataset.equipGear;p.hp=Math.min(p.hp,maxHp());p.en=Math.min(p.en,maxEn());save();bag()}if(t.dataset.travel!==undefined){let i=+t.dataset.travel,q=islands[i];if(s.level>=q.min){p.x=q.x;p.y=q.y;s.boat=false;closeModal();toast('VIAJOU PARA • '+q.name,'good')}}});
+$('bagBtn').onclick=bag;$('spinBtn').onclick=spinMenu;$('mapBtn').onclick=map;$('modalClose').onclick=closeModal;$('attackBtn').onclick=attack;$('dashBtn').onclick=dash;document.querySelectorAll('[data-skill]').forEach(b=>b.onclick=()=>skill(+b.dataset.skill));
+$('boatBtn').onclick=()=>{s.boat=!s.boat;toast(s.boat?'Barco chamado • navegue pelo oceano.':'Você desembarcou.');save()};
+function hakiArm(){s.hakiArm=!s.hakiArm;toast('Armamento '+(s.hakiArm?'ativado':'desativado'));save();hud()}function hakiObs(){s.hakiObs=!s.hakiObs;toast('Observação '+(s.hakiObs?'ativada':'desativada'));save();hud()}
 $('hakiArm').onclick=hakiArm;$('hakiObs').onclick=hakiObs;
-window.addEventListener('keydown',function(e){if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();keys[e.code]=true;if(e.repeat)return;if(e.code==='Space')attack();if(e.code==='KeyZ')skill(0);if(e.code==='KeyX')skill(1);if(e.code==='KeyC')skill(2);if(e.code==='KeyQ')dash();if(e.code==='KeyF')hakiArm();if(e.code==='KeyG')hakiObs();if(e.code==='KeyM')map();if(e.code==='KeyB')bag();if(e.code==='Escape'&&modal)closeModal()});window.addEventListener('keyup',function(e){keys[e.code]=false});
-var sb=$('stickbase'),stick=$('stick');function jm(e){if(e.pointerId!==joy.id)return;var r=sb.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,m=r.width*.32,d=Math.hypot(x,y);if(d>m){x=x/d*m;y=y/d*m}joy.x=x/m;joy.y=y/m;stick.style.transform='translate('+x+'px,'+y+'px)'}sb.addEventListener('pointerdown',function(e){joy.id=e.pointerId;sb.setPointerCapture(e.pointerId);jm(e)});sb.addEventListener('pointermove',jm);function je(e){if(e.pointerId===joy.id){joy.id=null;joy.x=joy.y=0;stick.style.transform=''}}sb.addEventListener('pointerup',je);sb.addEventListener('pointercancel',je);$('mobileAtk').onpointerdown=attack;
+window.addEventListener('keydown',e=>{if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(modal&&e.code==='Escape'){closeModal();return}keys[e.code]=true;if(e.repeat||modal)return;if(e.code==='Space')attack();if(e.code==='KeyZ')skill(0);if(e.code==='KeyX')skill(1);if(e.code==='KeyC')skill(2);if(e.code==='KeyQ')dash();if(e.code==='KeyF')hakiArm();if(e.code==='KeyG')hakiObs();if(e.code==='KeyM')map();if(e.code==='KeyB')bag()});window.addEventListener('keyup',e=>keys[e.code]=false);
+let sb=$('stickbase'),stick=$('stick');function jm(e){if(e.pointerId!==joy.id)return;let r=sb.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,m=r.width*.32,d=Math.hypot(x,y);if(d>m){x=x/d*m;y=y/d*m}joy.x=x/m;joy.y=y/m;stick.style.transform='translate('+x+'px,'+y+'px)'}sb.addEventListener('pointerdown',e=>{joy.id=e.pointerId;sb.setPointerCapture(e.pointerId);jm(e)});sb.addEventListener('pointermove',jm);function je(e){if(e.pointerId===joy.id){joy.id=null;joy.x=joy.y=0;stick.style.transform=''}}sb.addEventListener('pointerup',je);sb.addEventListener('pointercancel',je);$('mobileAtk').onpointerdown=attack;
 if(matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0)document.body.classList.add('touch');
-window.addEventListener('resize',resize);window.addEventListener('pagehide',save);resize();hud();requestAnimationFrame(loop);
-window.FruitSeasGame={getState:function(){save();return JSON.parse(JSON.stringify(s))},getView:function(){return{x:p.x,y:p.y,angle:p.angle,boat:s.boat,level:s.level,fruit:s.fruit,camX:cam.x,camY:cam.y,zoom:1,sea:seaOf(p.x)}},getCatalog:function(){return{islands:islands,fruits:fruits}},toast:toast};
+window.addEventListener('resize',resize);window.addEventListener('pagehide',save);resize();hud();drawMinimap();requestAnimationFrame(loop);
+window.FruitSeasGame={getState(){save();return JSON.parse(JSON.stringify(s))},getView(){return{x:p.x,y:p.y,angle:p.angle,boat:s.boat,level:s.level,fruit:s.fruit,camX:cam.x,camY:cam.y,zoom:1,sea:seaOf(p.x)}},getCatalog(){return{islands,fruits}},toast};
 })();
 </script>
 <script src="/online.js"></script>
